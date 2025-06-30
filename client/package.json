@@ -7,6 +7,7 @@
     "dev": "vite --host",
     "build": "vite build",
     "deploy": "netlify deploy --prod",
+    
     "lint": "eslint .",
     "preview": "vite preview"
   },

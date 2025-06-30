@@ -227,6 +227,15 @@
 .main_header.scrolled > nav > ul > li:hover span svg {
   fill: var(--primary-clr);
 }
+.main_header.scrolled > nav > ul > li:hover:nth-last-of-type(1) {
+  background: var(--body-bg-clr) !important;
+}
+.main_header.scrolled > nav > ul > li:hover:nth-last-of-type(1) a {
+  color: var(--primary-clr);
+}
+.main_header.scrolled > nav > ul > li:hover:nth-last-of-type(1) svg {
+  fill: var(--primary-clr);
+}
 .main_header.scrolled > nav > ul > li:hover .droplist {
   opacity: 1;
   visibility: visible;

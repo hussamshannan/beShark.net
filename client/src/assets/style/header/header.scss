@@ -154,6 +154,15 @@
                 fill: var(--primary-clr);
               }
             }
+            &:nth-last-of-type(1) {
+              background: var(--body-bg-clr) !important;
+              a {
+                color: var(--primary-clr);
+              }
+              svg {
+                fill: var(--primary-clr);
+              }
+            }
           }
           &:hover {
             .droplist {
