@@ -1,0 +1,73 @@
+@mixin flex($ai, $jc, $fdr, $gap) {
+  display: flex;
+  align-items: $ai;
+  justify-content: $jc;
+  flex-direction: $fdr;
+  gap: $gap;
+}
+@font-face {
+  font-family: "arabic_ExtraBold";
+  src: url("../../fonts/Almarai/Almarai-ExtraBold.ttf");
+}
+@font-face {
+  font-family: "arabic_bold";
+  src: url("../../fonts/Almarai/Almarai-Bold.ttf");
+}
+@font-face {
+  font-family: "arabic_light";
+  src: url("../../fonts/Almarai/Almarai-Light.ttf");
+}
+@font-face {
+  font-family: "arabic_Regular";
+  src: url("../../fonts/Almarai/Almarai-Regular.ttf");
+}
+
+:root {
+  /* Fonts */
+  --arabic-fm-exb: arabic_ExtraBold;
+  --arabic-fm-l: arabic_light;
+  --arabic-fm-r: arabic_Regular;
+  --arabic-fm-b: arabic_bold;
+  /* Base sizes - Mobile First */
+  --font-hero: clamp(2rem, 5vw + 1rem, 2.5rem); /* 32px → 40px */
+  --font-h1: clamp(1.75rem, 4vw + 0.5rem, 2rem); /* 28px → 32px */
+  --font-h2: clamp(1.5rem, 3vw + 0.5rem, 1.75rem); /* 24px → 28px */
+  --font-h3: clamp(1.25rem, 2.5vw + 0.5rem, 1.5rem); /* 20px → 24px */
+  --font-h4: clamp(1.125rem, 2vw + 0.5rem, 1.35rem); /* 18px → 20px */
+  --font-body: clamp(0.95rem, 1vw + 0.5rem, 1rem); /* 15.2px → 16px */
+  --font-small: clamp(0.8rem, 0.75vw + 0.5rem, 0.875rem); /* 12.8px → 14px */
+  --border-radius: 0.5rem; /* 8px */
+  /* Colors */
+  --primary-clr: #ffba00;
+  --primary-clr-light: #fdbf0d;
+  --body-bg-clr: #fff;
+  --body-bg-clr-gray: #efefef;
+  --header-gradient: linear-gradient(45deg, #e47d1a, #f9a513 17.92%, #fdbf0d);
+  --dark-svg-clr: #808080;
+  --light-svg-clr: #ffffff;
+  --txt-clr: #000;
+  --txt-clr-light: #fff;
+  --txt-clr-navy: #0a0624;
+  --dark-grey: #3b3b3b;
+  --dark-grey2: #5a5a5a;
+}
+
+/* Desktop overrides */
+@media (min-width: 768px) {
+  :root {
+    --font-hero: 4rem; /* 64px */
+    --font-h1: 3rem; /* 48px */
+    --font-h2: 2.25rem; /* 36px */
+    --font-h3: 1.875rem; /* 30px */
+    --font-body: 1.125rem; /* 18px */
+    --font-small: 1rem; /* 16px */
+  }
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  interpolate-size: allow-keywords !important;
+  transition-behavior: allow-discrete !important;
+  color: var(--txt-clr);
+}
