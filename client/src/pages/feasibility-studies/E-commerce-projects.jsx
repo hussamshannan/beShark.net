@@ -2,18 +2,36 @@ import { React, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 //improt images
 import paperwork from "../../assets/images/paperwork.jpg";
-import about_1 from "../../assets/images/about1.webp";
-import about_2 from "../../assets/images/about2.webp";
-import about_3 from "../../assets/images/about3.webp";
-import about_4 from "../../assets/images/about4.jpg";
-import about_5 from "../../assets/images/about5.webp";
-import about_6 from "../../assets/images/about6.webp";
-import about_7 from "../../assets/images/about7.webp";
-import about_8 from "../../assets/images/about8.webp";
+
 import "../../assets/style/common/feasibility-studies.css";
 import AnimatedContent from "../../components/AnimatedContent";
 import { motion } from "framer-motion";
+import axios from "axios";
+
 export default function E_commerce_projects() {
+  const path = window.location.pathname; // e.g. "/e-commerce-projects"
+  const lastSegment = path.split("/").filter(Boolean).pop().toLowerCase();
+  const [customSlides, setCustomSlides] = useState([]);
+  useEffect(() => {
+    fetchSlidesByCategory(lastSegment).then((slides) => {
+      const normalized = slides.map((slide) => ({
+        ...slide,
+        img: slide.imgUrl, // to keep it consistent with local previews
+      }));
+      setCustomSlides(normalized);
+    });
+  }, []);
+  const fetchSlidesByCategory = async (category) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5005/slides/category/${category}`
+      );
+      return response.data; // slides array
+    } catch (err) {
+      console.error("Failed to fetch slides:", err);
+      return [];
+    }
+  };
   return (
     <motion.div
       className="about-pages"
@@ -29,73 +47,21 @@ export default function E_commerce_projects() {
         </AnimatedContent>
         <img src={paperwork} alt="" />
       </div>
+
       <div className="slides">
-        <div className="slide">
-          <div className="img">
-            <img src={about_1} alt="" />
+        {customSlides.map((slide, index) => (
+          <div className="slide" key={slide._id || `custom_${index}`}>
+            <div className="img" style={{ position: "relative" }}>
+              {slide.img && (
+                <img src={slide.img || slide.imgUrl} alt={slide.title} />
+              )}
+            </div>
+            <div className="text">
+              <h3>{slide.title}</h3>
+              <p style={{ whiteSpace: "pre-wrap" }}>{slide.desc}</p>
+            </div>
           </div>
-          <div className="text">
-            <h3>آلية إعداد دراسة الجدوى للمطاعم</h3>
-            <p>
-              *يتم إعداد دراسة جدوى متكاملة للمطعم أو الكافيه **وتشمل بيان
-              تكاليف المشروع التفصيلية *حجم الأرباح اليومية والشهرية الارباح
-              السنوية لمدة عشر سنوات في ضوء الدراسة السوقية للمشروع وفي اطار :
-              موقع المشروع والمساحة الخاصة به و في ضوء النظام الذي يعمل به
-              المطعم الفئة المستهدفة كذلك بيان الموظفين والرواتب ،، وقائمة
-              الأسعار ، والوجبات ، والمشروبات المقدمة.
-            </p>
-          </div>
-        </div>
-        <div className="slide">
-          <div className="img">
-            <img src={about_1} alt="" />
-          </div>
-          <div className="text">
-            <h3>شركة مناطق الإقتصادية</h3>
-            <p>
-              يتم إعداد دراسة الجدوى بما يتناسب مع متطلبات شركة مناطق الإقتصادية
-              في ضوء المساحة المطلوبة لأرض المصنع *** ويتم ارفاق المتطلبات كما
-              يلي: – الموافقة المبدئية للمشروع الصادرة من وزارة التجارة والصناعة
-              – الرسم الهندسي المبدئي للمشروع (مع توافر خدمة التعديل المطلوبة
-              طبقا لمتطلبات شركة مناطق الإقتصادية)- السجل التجاري للمصنع- بيان
-              الملاءة المالية للمشروع.
-            </p>
-          </div>
-        </div>
-        <div className="slide">
-          <div className="img">
-            <img src={about_1} alt="" />
-          </div>
-          <div className="text">
-            <h3>وزارة البلدية والبيئة</h3>
-            <p>
-              يتم إعداد دراسة الجدوى لطلب أرض (((مصانع إعادة التدوير))) إلى
-              وزارة البلدية والبيئة **ومتابعة الملف المقدم في حال رغبة العميل
-              بذلك حتى الحصول على الموافقات المطلوبة.
-            </p>
-          </div>
-        </div>
-        <div className="slide">
-          <div className="img">
-            <img src={about_1} alt="" />
-          </div>
-          <div className="text">
-            <h3>وزارة التجارة والصناعة</h3>
-            <p>
-              يتم إعداد دراسة جدوى بما يتناسب مع متطلبات الوزارة وفي ضوء المساحة
-              المطلوبة لأرض المصنع وتشمل الدراسة:- *الدراسة الفنية للمشروع
-              *الدراسة السوقية *المصانع المتوفرة في قطر وحجم انتاجها *الدراسة
-              التسويقية للمشروع *بيان الايدي العاملة *تكلفة المشروع بالتفصيل
-              *القوائم المالية وتشمل بيان الإيرادات بالتفصيل وبيان المصروفات
-              بالتفصيل ومنها الرواتب والايجارات وساعات العمل وغيرها. . . . **
-              كما يتم إعداد الرسم الهندسي المبدئي بما يتناسب مع متطلبات وزارة
-              التجارة والصناعة. **وكذلك بيان الالات والمعدات و عروض أسعار لها.
-              *** يتم تقديم الملف بالكامل من خلال النافذة الواحدة –التأسيس
-              الشامل ، ويتم متابعة الملف بالكامل واجراء أي متطلبات تطلبها
-              الوزارة وتقديمها حتى الحصول على الموافقة الكاملة للملف .
-            </p>
-          </div>
-        </div>
+        ))}
       </div>
     </motion.div>
   );
