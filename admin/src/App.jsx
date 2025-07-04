@@ -105,7 +105,7 @@ function App() {
                   >
                     {Hero.slide1_desc}
                   </p>
-                  <Link to={""}>اطلب الخدمة</Link>
+                  {/* <Link to={""}>اطلب الخدمة</Link> */}
                 </div>
               </AnimatedContent>
               <div className="img">
@@ -132,7 +132,7 @@ function App() {
                 >
                   {Hero.slide2_desc}
                 </p>
-                <Link to={""}>اطلب الخدمة</Link>
+                {/* <Link to={""}>اطلب الخدمة</Link> */}
               </div>
               <div className="img">
                 <img src={img2} alt="" />
@@ -158,7 +158,7 @@ function App() {
                 >
                   {Hero.slide3_desc}
                 </p>
-                <Link to={""}>اطلب الخدمة</Link>
+                {/* <Link to={""}>اطلب الخدمة</Link> */}
               </div>
               <div className="img">
                 <img src={img3} alt="" />

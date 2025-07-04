@@ -41,6 +41,7 @@
   --txt-clr: #000;
   --txt-clr-light: #fff;
   --txt-clr-navy: #0a0624;
+  --txt-clr-gray: #5f6c76;
   --dark-grey: #3b3b3b;
   --dark-grey2: #5a5a5a;
 }
@@ -70,6 +71,7 @@
   width: 100dvw;
   min-height: 100dvh;
   background: var(--body-bg-clr-gray);
+  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -183,6 +185,7 @@
   flex-direction: row;
   gap: calc(1rem + 1vw);
   flex-wrap: wrap;
+  overflow-x: hidden;
 }
 .about-pages .types .type {
   position: relative !important;
@@ -231,4 +234,66 @@
 }
 .about-pages .types .type:hover {
   scale: 1.05;
+}
+
+@media (max-width: 990px) {
+  .types {
+    padding: 5rem 0.5rem;
+    width: clamp(200px, 100%, 1320px);
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    gap: calc(1rem + 1vw);
+    flex-wrap: wrap;
+    overflow-x: hidden;
+  }
+  .types .type {
+    position: relative !important;
+    width: clamp(300px, 95%, 400px) !important;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 0rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .types .type .text {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 3;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .types .type .text h1 {
+    width: 65%;
+    color: var(--txt-clr-light);
+    font-family: var(--arabic-fm-exb);
+    font-size: var(--font-h3);
+  }
+  .types .type .video {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .types .type .video video {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+    border-radius: var(--border-radius);
+  }
+  .types .type:hover {
+    scale: 1.05;
+  }
 }/*# sourceMappingURL=feasibility-studies.css.map */

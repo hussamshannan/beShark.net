@@ -9,7 +9,15 @@ export default function Header() {
   const [openDetail, setOpenDetail] = useState(null); // track open dropdown
 
   const sidebarRef = useRef(null);
-
+  function openDialog() {
+    const dialog = document.querySelector(".dialog");
+    if (dialog) {
+      dialog.style.display = "flex"; // make visible first
+      setTimeout(() => {
+        dialog.classList.add("open"); // trigger opacity animation
+      }, 10); // slight delay to allow reflow
+    }
+  }
   const toggleSidebar = () => setIsSideOpen((prev) => !prev);
 
   const toggleDetails = (id) => {
@@ -149,6 +157,9 @@ export default function Header() {
             <Link to="/previous-works">سابقة الأعمال</Link>
           </li>
           <li>
+            <Link onClick={openDialog}>طلب تواصل</Link>
+          </li>
+          <li>
             <Link
               to="https://wa.me/97466877885?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%D9%83%D9%85"
               target="_blank"
@@ -200,7 +211,7 @@ export default function Header() {
               >
                 <summary>
                   <p>عنا</p>
-                  <span>{more}</span>
+                  <span></span>
                 </summary>
                 <ul>
                   <li>
@@ -220,7 +231,7 @@ export default function Header() {
               >
                 <summary>
                   <p>دراسات الجدوى</p>
-                  <span>{more}</span>
+                  <span></span>
                 </summary>
                 <ul>
                   <li>

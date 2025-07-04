@@ -42,7 +42,7 @@ export default function Feasibility_studies() {
         </Link>
         <Link to={"/farms"} className="type">
           <div className="text">
-            <h1>دراسات جودى المزارع</h1>
+            <h1>دراسات جدوى المزارع</h1>
           </div>
           <div className="video">
             <video autoPlay={true} loop muted playsInline controls={false}>

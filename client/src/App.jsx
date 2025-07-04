@@ -76,7 +76,7 @@ function App() {
                     متخصصون في الإستشارات الإدارية لجميع المشاريع داخل دول مجلس
                     التعاون الخليجي
                   </p>
-                  <Link to={""}>اطلب الخدمة</Link>
+                  {/* <Link to={""}>اطلب الخدمة</Link> */}
                 </div>
               </AnimatedContent>
               <div className="img">
@@ -93,7 +93,7 @@ function App() {
                   متخصصون في الإستشارات الإدارية لجميع المشاريع داخل دول مجلس
                   التعاون الخليجي
                 </p>
-                <Link to={""}>اطلب الخدمة</Link>
+                {/* <Link to={""}>اطلب الخدمة</Link> */}
               </div>
               <div className="img">
                 <img src={img2} alt="" />
@@ -108,7 +108,7 @@ function App() {
                   متخصصون في الإستشارات الإدارية لجميع المشاريع داخل دول مجلس
                   التعاون الخليجي
                 </p>
-                <Link to={""}>اطلب الخدمة</Link>
+                {/* <Link to={""}>اطلب الخدمة</Link> */}
               </div>
               <div className="img">
                 <img src={img3} alt="" />
@@ -242,10 +242,10 @@ function App() {
               slidesPerView: 3, // 👈 from 768px and up (desktop/tablet)
             },
           }}
-          autoplay={{
-            delay: 4500,
-            disableOnInteraction: false,
-          }}
+          // autoplay={{
+          //   delay: 4500,
+          //   disableOnInteraction: false,
+          // }}
           speed={1500}
           navigation={true}
           pagination={{ clickable: true }}

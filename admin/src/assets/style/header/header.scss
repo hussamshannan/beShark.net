@@ -331,6 +331,12 @@
               border-bottom: 0.5px solid lightgray;
               a {
                 color: var(--txt-clr);
+                transition: color 0.3s ease;
+              }
+              &:hover {
+                a {
+                  color: var(--primary-clr);
+                }
               }
               &:nth-child(1) {
                 border-top: 0.5px solid lightgray;
@@ -356,10 +362,31 @@
                 @include flex(center, space-between, row, 0.5rem);
                 padding-bottom: 0.5rem;
                 span {
+                  position: relative;
                   display: grid;
                   place-content: center;
-                  svg {
-                    fill: var(--dark-svg-clr);
+                  padding-inline: 1rem;
+                  &::before {
+                    position: absolute;
+                    width: 0.8rem;
+                    height: 0.1rem;
+                    content: "";
+                    background: var(--txt-clr);
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: all 0.3s ease;
+                  }
+                  &::after {
+                    position: absolute;
+                    height: 0.8rem;
+                    width: 0.1rem;
+                    content: "";
+                    background: var(--txt-clr);
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: all 0.3s ease;
                   }
                 }
               }
@@ -382,6 +409,12 @@
                   }
                   a {
                     color: var(--txt-clr);
+                    transition: color 0.3s ease;
+                  }
+                  &:hover {
+                    a {
+                      color: var(--primary-clr);
+                    }
                   }
                 }
               }
@@ -392,6 +425,17 @@
               &.active {
                 ul {
                   height: auto;
+                }
+                summary {
+                  span {
+                    &::after {
+                      transform: translate(-50%, -50%) rotate(90deg);
+                      background: var(--primary-clr);
+                    }
+                    &::before {
+                      background: var(--primary-clr);
+                    }
+                  }
                 }
               }
             }

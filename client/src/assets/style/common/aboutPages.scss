@@ -6,6 +6,7 @@
   min-height: 100dvh;
   background: var(--body-bg-clr-gray);
   @include flex(center, flex-start, column, 0.5rem);
+  overflow-x: hidden;
   padding-bottom: 5rem;
   .headerimg {
     position: relative;
@@ -125,6 +126,7 @@
           text-align: justify;
           font-family: var(--arabic-fm-r);
           font-size: var(--font-body);
+          color: var(--txt-clr-gray);
           transition: color 0.3s ease;
         }
       }
@@ -260,6 +262,7 @@
           text-align: justify;
           font-family: var(--arabic-fm-r);
           font-size: var(--font-body);
+          color: var(--txt-clr-gray);
         }
       }
     }

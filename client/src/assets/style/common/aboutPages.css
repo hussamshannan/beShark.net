@@ -41,6 +41,7 @@
   --txt-clr: #000;
   --txt-clr-light: #fff;
   --txt-clr-navy: #0a0624;
+  --txt-clr-gray: #5f6c76;
   --dark-grey: #3b3b3b;
   --dark-grey2: #5a5a5a;
 }
@@ -75,6 +76,7 @@
   justify-content: flex-start;
   flex-direction: column;
   gap: 0.5rem;
+  overflow-x: hidden;
   padding-bottom: 5rem;
 }
 .about-pages .headerimg {
@@ -206,6 +208,7 @@
   text-align: justify;
   font-family: var(--arabic-fm-r);
   font-size: var(--font-body);
+  color: var(--txt-clr-gray);
   transition: color 0.3s ease;
 }
 .about-pages .cards > .card::after {
@@ -353,5 +356,6 @@
     text-align: justify;
     font-family: var(--arabic-fm-r);
     font-size: var(--font-body);
+    color: var(--txt-clr-gray);
   }
 }/*# sourceMappingURL=aboutPages.css.map */

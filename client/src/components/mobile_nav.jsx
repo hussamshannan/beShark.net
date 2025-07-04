@@ -3,6 +3,18 @@ import { React, useState } from "react";
 import { Link } from "react-router-dom";
 export default function Mobile_nav() {
   const [showMoreServices, setShowMoreServices] = useState(false);
+  function openDialog() {
+    const dialog = document.querySelector(".dialog");
+    if (dialog) {
+      dialog.style.display = "flex"; // make visible first
+      setTimeout(() => {
+        dialog.classList.add("open"); // trigger opacity animation
+      }, 10); // slight delay to allow reflow
+    }
+  }
+
+
+  
 
   const toggleMoreServices = () => {
     setShowMoreServices((prev) => !prev);
@@ -123,7 +135,7 @@ export default function Mobile_nav() {
         <Link to={"/"} className="unknown">
           <span>{unknown}</span>
         </Link>
-        <Link to={"/"}>
+        <Link onClick={openDialog}>
           <span>{chat}</span>
           <p>تواصل</p>
         </Link>

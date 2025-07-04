@@ -4,6 +4,7 @@
   width: 100dvw;
   min-height: 100dvh;
   background: var(--body-bg-clr-gray);
+  overflow-x: hidden;
   @include flex(center, flex-start, column, 0.5rem);
   .headerimg {
     position: relative;
@@ -92,9 +93,61 @@
     @include flex(center, space-evenly, row, calc(1rem + 1vw));
 
     flex-wrap: wrap;
+    overflow-x: hidden;
     .type {
       position: relative !important;
       width: clamp(300px, 100%, 410px);
+      height: 300px;
+      @include flex(center, center, row, 0rem);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      .text {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 3;
+        padding: 1rem;
+        @include flex(flex-end, flex-start, row, 1rem);
+        h1 {
+          width: 65%;
+          color: var(--txt-clr-light);
+          font-family: var(--arabic-fm-exb);
+          font-size: var(--font-h3);
+        }
+      }
+      .video {
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+
+        video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: var(--border-radius);
+        }
+      }
+      &:hover {
+        scale: 1.05;
+      }
+    }
+  }
+}
+
+@media (max-width:990px){
+  .types {
+    padding: 5rem 0.5rem;
+    width: clamp(200px, 100%, 1320px);
+    @include flex(center, space-evenly, row, calc(1rem + 1vw));
+
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    .type {
+      position: relative !important;
+      width: clamp(300px, 95%, 400px) !important;
       height: 300px;
       @include flex(center, center, row, 0rem);
       border-radius: var(--border-radius);

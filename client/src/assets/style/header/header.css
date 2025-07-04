@@ -41,6 +41,7 @@
   --txt-clr: #000;
   --txt-clr-light: #fff;
   --txt-clr-navy: #0a0624;
+  --txt-clr-gray: #5f6c76;
   --dark-grey: #3b3b3b;
   --dark-grey2: #5a5a5a;
 }
@@ -74,7 +75,7 @@
   background: var(--primary-clr);
   box-shadow: 0 6px 34px rgba(95, 45, 237, 0.15);
   border-radius: 0.5rem;
-  z-index: 10000;
+  z-index: 99999;
   padding-inline: 1rem;
   display: flex;
   align-items: center;
@@ -428,6 +429,10 @@
   }
   .main_header > .side .bottom nav ul li a {
     color: var(--txt-clr);
+    transition: color 0.3s ease;
+  }
+  .main_header > .side .bottom nav ul li:hover a {
+    color: var(--primary-clr);
   }
   .main_header > .side .bottom nav ul li:nth-child(1) {
     border-top: 0.5px solid lightgray;
@@ -457,11 +462,32 @@
     padding-bottom: 0.5rem;
   }
   .main_header > .side .bottom nav ul .details summary span {
+    position: relative;
     display: grid;
     place-content: center;
+    padding-inline: 1rem;
   }
-  .main_header > .side .bottom nav ul .details summary span svg {
-    fill: var(--dark-svg-clr);
+  .main_header > .side .bottom nav ul .details summary span::before {
+    position: absolute;
+    width: 0.8rem;
+    height: 0.1rem;
+    content: "";
+    background: var(--txt-clr);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+  }
+  .main_header > .side .bottom nav ul .details summary span::after {
+    position: absolute;
+    height: 0.8rem;
+    width: 0.1rem;
+    content: "";
+    background: var(--txt-clr);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
   }
   .main_header > .side .bottom nav ul .details ul {
     interpolate-size: allow-keywords !important;
@@ -483,12 +509,23 @@
   }
   .main_header > .side .bottom nav ul .details ul li a {
     color: var(--txt-clr);
+    transition: color 0.3s ease;
+  }
+  .main_header > .side .bottom nav ul .details ul li:hover a {
+    color: var(--primary-clr);
   }
   .main_header > .side .bottom nav ul .details summary::-webkit-details-marker {
     display: none;
   }
   .main_header > .side .bottom nav ul .details.active ul {
     height: auto;
+  }
+  .main_header > .side .bottom nav ul .details.active summary span::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    background: var(--primary-clr);
+  }
+  .main_header > .side .bottom nav ul .details.active summary span::before {
+    background: var(--primary-clr);
   }
   .main_header .side.show {
     opacity: 1;
