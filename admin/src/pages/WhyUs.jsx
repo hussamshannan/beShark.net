@@ -84,8 +84,8 @@ export default function WhyUs() {
 
     if (
       !img ||
-      !topTitle.trim() ||
-      !sectionTitle.trim() ||
+      // !topTitle.trim() ||
+      // !sectionTitle.trim() ||
       !description.trim()
     ) {
       toast.warn("يرجى تعبئة جميع الحقول المطلوبة!");
@@ -445,7 +445,7 @@ export default function WhyUs() {
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick={false}
+        closeOnClick={true}
         rtl
         pauseOnFocusLoss
         draggable

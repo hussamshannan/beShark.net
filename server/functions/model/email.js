@@ -17,7 +17,15 @@ const EmailsSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    }
+    },
+    isSave: {
+      type: Boolean,
+      default: false,
+    },
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields

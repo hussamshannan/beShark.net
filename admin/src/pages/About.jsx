@@ -76,8 +76,8 @@ const path = window.location.pathname; // e.g. "/e-commerce-projects"
 
     if (
       !img ||
-      !topTitle.trim() ||
-      !sectionTitle.trim() ||
+      // !topTitle.trim() ||
+      // !sectionTitle.trim() ||
       !description.trim()
     ) {
       toast.warn("يرجى تعبئة جميع الحقول المطلوبة!");
@@ -435,7 +435,7 @@ const path = window.location.pathname; // e.g. "/e-commerce-projects"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick={false}
+        closeOnClick={true}
         rtl
         pauseOnFocusLoss
         draggable

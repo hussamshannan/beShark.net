@@ -5,21 +5,25 @@ const aboutSchema = new mongoose.Schema(
   {
     topTitle: {
       type: String,
-      required: true,
+      // required: true,
     },
     topSubtitle: {
       type: String,
-      required: true,
+      // required: true,
     },
     sectionTitle: {
       type: String,
-      required: true,
+      // required: true,
     },
     description: {
       type: String,
       required: true,
     },
     imgUrl: {
+      type: String,
+      required: true,
+    },
+    imgPublicId: {
       type: String,
       required: true,
     },

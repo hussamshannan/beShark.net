@@ -16,6 +16,10 @@ const slideSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    imgPublicId: {
+      type: String,
+      required: true,
+    },
     category: {
       type: String,
       enum: [

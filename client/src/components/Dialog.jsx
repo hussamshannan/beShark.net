@@ -67,7 +67,7 @@ export default function Dialog() {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:5005/send", formData);
+      const response = await axios.post("http://localhost:5005/email/send", formData);
       toast.success("تم إرسال البيانات بنجاح");
       console.log("Server response:", response.data);
 

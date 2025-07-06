@@ -18,7 +18,8 @@ body {
       width: 100%;
       height: 94.5dvh;
       isolation: isolate;
-      transition: all 0.3s ease;
+      // transition: all 0.3s ease !important;
+      
       .bg-video {
         position: absolute;
         z-index: -1;
@@ -26,13 +27,11 @@ body {
         width: 100%;
         height: 100%;
         @include flex(center, center, row, 0rem);
-        transition: all 0.5s linear !important;
-
+        
         video {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: all 0.5s linear !important;
         }
         &::after {
           content: "";
@@ -95,7 +94,7 @@ body {
             }
             .img {
               position: relative;
-              width: clamp(300px, 100%, 700px);
+              width: clamp(300px, 100%, 600px);
               transition: all 0.5s linear !important;
               img {
                 width: 100%;
@@ -261,7 +260,7 @@ body {
     .feedback {
       width: 100%;
       padding: 1.5rem 1rem;
-      background: var(--dark-grey2);
+      background: linear-gradient(45deg,#30496b,#30b8d2);
       @include flex(center, center, column, 3rem);
       .feedback-header {
         width: 100%;
@@ -294,14 +293,16 @@ body {
           > p {
             position: relative;
             font-size: var(--font-body);
-            font-family: var(--arabic-fm-r);
+            font-family: var(--arabic-fm-b);
             color: var(--txt-clr-gray);
             text-align: justify;
             border-radius: var(--border-radius);
             background: var(--body-bg-clr);
-            word-spacing: 1ch;
-            padding: 2.5rem;
-            padding-bottom: 5rem;
+            word-spacing: 0.4ch;
+            font-weight: bold;
+            line-height: 3.8ch;
+            padding: 50px 40px 65px;
+
             isolation: isolate;
             display: grid;
             place-content: center;
@@ -476,7 +477,6 @@ body {
         }
       }
     }
-    
   }
   .dialog {
     position: fixed;
@@ -631,7 +631,7 @@ body {
 // for mobile
 @media (max-width: 990px) {
   .hero {
-    height: 94.5dvh !important;
+    height: 650px !important;
     max-height: 900px;
     .mySwiper {
       position: absolute;
@@ -646,7 +646,7 @@ body {
         .swipe-image {
           margin-top: auto;
           width: clamp(300px, 100%, 1500px);
-          @include flex(center, center, row-reverse, 1rem !important);
+          @include flex(center, center, row-reverse, 3rem !important);
           display: flex !important;
           flex-wrap: wrap;
 
@@ -678,7 +678,8 @@ body {
           .img {
             position: relative;
             width: clamp(100px, 40dvh, 600px) !important;
-
+            // width: 300px !important;
+            // height: 390px !important;
             img {
               width: 100%;
               height: 100%;
@@ -743,6 +744,17 @@ body {
       a,
       li {
         @include flex(center, center, column, 0rem);
+
+        p {
+          color: var(--txt-clr-gray);
+          font-family: var(--arabic-fm-r);
+          font-size: var(--font-small);
+          @include flex(center, center, row-reverse, 0rem);
+
+          span {
+            rotate: 180deg;
+          }
+        }
         span {
           @include flex(center, center, column, 0.5rem);
           svg {
@@ -756,6 +768,7 @@ body {
         border-radius: 50%;
         display: grid;
         place-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         span {
           svg {
             scale: 1.3;
@@ -830,6 +843,9 @@ body {
 
   footer {
     margin-bottom: 6rem;
+    .desktop {
+      display: none !important;
+    }
   }
 }
 .swiper {
@@ -844,7 +860,7 @@ body {
     place-content: center;
     background: transparent !important;
     transition: all 0.3s ease !important;
-    border: 1px solid var(--dark-grey) !important;
+    border: 1px solid var(--body-bg-clr-gray) !important;
     &:hover {
       background: var(--primary-clr) !important;
     }
@@ -867,10 +883,5 @@ body {
   }
 }
 
-@media (max-width: 990px) {
-  footer {
-    .desktop {
-      display: none !important;
-    }
-  }
-}
+
+
