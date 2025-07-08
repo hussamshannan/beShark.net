@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "./assets/style/app/app.css";
@@ -23,8 +23,39 @@ import feasibility_studies from "./assets/videos/feasibility_studies.mp4";
 import administrational_consultations from "./assets/videos/administrational_consultations.mp4";
 import files_management from "./assets/videos/files_management.mp4";
 import { motion } from "framer-motion";
-
+import axios from "axios";
 function App() {
+  const [aboutCards, setAboutCards] = useState([]);
+
+  const [selectedFont, setSelectedFont] = useState("arabic_bold_1");
+  useEffect(() => {
+    // Fetch latest saved font from server
+    const fetchFont = async () => {
+      try {
+        const res = await axios.get(
+          "https://jadwa-study-backend.netlify.app/.netlify/functions/app/fonts/latest"
+        );
+        const { fontFamily, fontStyles } = res.data;
+        setSelectedFont(fontFamily);
+        document.documentElement.style.setProperty(
+          "--arabic-fm-r",
+          fontStyles.regular
+        );
+        document.documentElement.style.setProperty(
+          "--arabic-fm-b",
+          fontStyles.bold
+        );
+        document.documentElement.style.setProperty(
+          "--arabic-fm-exb",
+          fontStyles.extraBold
+        );
+      } catch (err) {
+        console.error("Error fetching font:", err.message);
+      }
+    };
+
+    fetchFont();
+  }, []);
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleAnswer = (index) => {
@@ -42,6 +73,40 @@ function App() {
       <path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
     </svg>
   );
+  const fetchAboutByCategory = async () => {
+    try {
+      const response = await axios.get(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/question`
+      );
+      return response.data; // expecting array of about cards
+    } catch (err) {
+      console.error("Failed to fetch about data:", err);
+      return [];
+    }
+  };
+  useEffect(() => {
+    fetchAboutByCategory().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        // Normalize to keep imgUrl as img and no imgFile
+        const normalized = data.map((item) => ({
+          ...item,
+        }));
+        setAboutCards(normalized);
+      }
+    });
+  }, []);
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.2,
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    }),
+  };
 
   return (
     <motion.div
@@ -342,148 +407,37 @@ function App() {
         </AnimatedContent>
       </div>
       <div className="commonQuestion">
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
+        {aboutCards.map((about, index) => (
+          <motion.div
+            className="text"
+            key={index}
+            custom={index}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={cardVariants}
+          >
             <div
-              className={`question ${openIndex === 0 ? "open" : ""}`}
-              onClick={() => toggleAnswer(0)}
+              className={`question ${openIndex === index ? "open" : ""}`}
+              onClick={() => toggleAnswer(index)}
             >
-              <h4>هل دراسة الجدوى مخصصة للتقديم إلى وزارة أو هيئة حكومية؟</h4>
+              <h4>{about.question}</h4>
               <span
                 style={{
                   transform:
-                    openIndex === 0 ? "rotate(180deg)" : "rotate(0deg)",
+                    openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
                 }}
               >
                 {arrowDown}
               </span>
             </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 0 ? "400px" : "0",
-              }}
-            >
-              <p>
-                بالتأكيد حيث ان إعداد دراسة الجدوى يتطلب معرفة الجهة الموجه
-                اليها دراسة الجدوى وعند ارسال طلب الخدمة من قبلكم يتم التواصل
-                معكم بشأن الجهة الموجه اليها دراسة الجدوى سواء كانت وزارة أو
-                هيئة أو كانت لتقديمها إلى مستثمر للتمويل أو غير ذلك وبناء على
-                ذلك يتم إعداد دراسة الجدوى طبقا لمتطلبات هذه الجهة وآلية عمل
-                دراسات الجدوى الخاصة بها
-              </p>
+            <div className={`answer ${openIndex === index ? "open" : ""}`}>
+              <div>
+                <p>{about.answer}</p>
+              </div>
             </div>
-          </div>
-        </AnimatedContent>
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
-            <div
-              className={`question ${openIndex === 1 ? "open" : ""}`}
-              onClick={() => toggleAnswer(1)}
-            >
-              <h4>ما هي محتويات دراسة الجدوى التي تقدمونها؟</h4>
-              <span
-                style={{
-                  transform:
-                    openIndex === 1 ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                {arrowDown}
-              </span>
-            </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 1 ? "400px" : "0",
-              }}
-            >
-              <p>
-                تحتوي دراسة الجدوى لاي مشروع على : اولا دراسة السوق للمشروع
-                وبيان المنافسين وحجم الاستيراد للمنتجات ان وجدت وبيان حجم الطلب
-                والعرض والفجوة السوقية والحصة السوقية للمشروع والتحليل المقارن.
-                ثانيا: الدراسة الفنية والإدارية حيث تحتوي على كافة بيانات تشغيل
-                المشروع الفنية من الات ومعدات ومصادرها واسعارها والمواد الخام
-                ومصدرها واسعارها بالاضافة إلى الهيكل التنظيمي للمشروع وبيان
-                الفريق الفني والوظيفي لفريق العمل ورواتبهم طبقا لمتوسط الرواتب
-                بالدولة المقدم لها المشروع بالاضافة إلى مقترحات اخرى فنية وتقنية
-                تخص آلية التشغيل للمشروع ثالثا: الدراسة المالية للمشروع ويتم
-                اعدادها بناء على دراسة السوق والدراسة الفنية والإدارية للمشروع
-                حيث يتم احتساب تكلفة المشروع الثابتة والمتغيرة بالاضافة إلى بيان
-                الايرادات والمصروفات خلال مدة من ثلاث إلى عشر سنوات (طبقا لنوع
-                المشروع ) بالاضافة إلى التحليل المالي للمشروع رابعا: فترة
-                التنفيذ يتم إعداد جدول التنفيذ للمشروع طبقا لكل مرحلة بناء على
-                ما سبق من معلومات تخص المشروع خامسا: تحليل المخاطر السوقية
-                والتشغيلية للمشروع وتحليل سوات
-              </p>
-            </div>
-          </div>
-        </AnimatedContent>
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
-            <div
-              className={`question ${openIndex === 2 ? "open" : ""}`}
-              onClick={() => toggleAnswer(2)}
-            >
-              <h4>هل من الممكن مناقشة دراسة الجدوى معكم بعد إستلامها؟</h4>
-              <span
-                style={{
-                  transform:
-                    openIndex === 2 ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                {arrowDown}
-              </span>
-            </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 2 ? "400px" : "0",
-              }}
-            >
-              <p>
-                يحق للعميل مناقشة دراسة الجدوى من خلال وسائل التواصل الموضحة
-                بموقع الشركة الإلكتروني أو من خلال الواتس اب الخاص بالشركة كما
-                يتم مراجعة كافة التقييمات بعد تقديمها للجهات الاخرى من قبل
-                العملاء واجراء التعديلات المطلوبة
-              </p>
-            </div>
-          </div>
-        </AnimatedContent>
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
-            <div
-              className={`question ${openIndex === 3 ? "open" : ""}`}
-              onClick={() => toggleAnswer(3)}
-            >
-              <h4>كيف يتم تقديم خدمة الإستشارات الإدارية الدورية من قبلكم؟</h4>
-              <span
-                style={{
-                  transform:
-                    openIndex === 3 ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                {arrowDown}
-              </span>
-            </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 3 ? "400px" : "0",
-              }}
-            >
-              <p>
-                يتم التعاقد مع الشركة على إعداد إستشارات إدارية دورية (باسعار
-                تنافسية) حيث يتم إستلام البيانات التي نطلبها من قبلكم والعمل
-                عليها من خلال فريق العمل ومن ثم تقديم تقرير شهري يخص الشهر
-                السابق من بيانات مالية ومن ثم تقرير اخر شهري يخص الشهر القادم
-                والية العمل من خلاله ويتم إعداد التقييمات بناء على معدلات العمل
-                ومدى تطور المشروع وبعد تسليمكم التقرير يتم تحديد موعد مع المسؤول
-                بالشركة لديكم أو مع ادارة المشروع حسب رغبتكم ويتم مناقشة
-                التقارير بالتفصيل من خلال احد برامج التواصل بالتنسيق المسبق معكم
-              </p>
-            </div>
-          </div>
-        </AnimatedContent>
+          </motion.div>
+        ))}
       </div>
     </motion.div>
   );

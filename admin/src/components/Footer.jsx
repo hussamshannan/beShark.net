@@ -41,18 +41,14 @@ export default function Footer() {
         <div className="bottom">
           <div className="copyright">
             <p>
-              حقوق الطبع والنشر © {currentYear}
+              حقوق الطبع والنشر
               <span> شارِك للإستشارات </span>. جميع الحقوق محفوظة
             </p>
           </div>
           <div className="design">
             <p>
               تم التصميم بواسطة
-              <Link
-                to={"https://www.linkedin.com/in/hussam-shannan-47071b291/"}
-              >
-                hussam shannan
-              </Link>
+              <Link to={"/"}>{/* hussam shannan */}</Link>
             </p>
           </div>
         </div>
@@ -60,18 +56,18 @@ export default function Footer() {
       <div className="mobile">
         <div className="copyright">
           <p>
-            حقوق الطبع والنشر © {currentYear}
+            حقوق الطبع والنشر
             <span> شارِك للإستشارات </span>. جميع الحقوق محفوظة
           </p>
         </div>
-        <div className="design">
+        {/* <div className="design">
           <p>
             تم التصميم بواسطة
             <Link to={"https://www.linkedin.com/in/hussam-shannan-47071b291/"}>
               hussam shannan
             </Link>
           </p>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

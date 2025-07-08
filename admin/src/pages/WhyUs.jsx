@@ -153,13 +153,13 @@ export default function WhyUs() {
     if (about._id && about._id.toString().length !== 13) {
       // existing (assumption: tempId is timestamp 13 chars)
       response = await axios.put(
-        `http://localhost:5005/${lastSegment}/${about._id}`,
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${about._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
     } else {
       response = await axios.post(
-        `http://localhost:5005/${lastSegment}`,
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -179,7 +179,9 @@ export default function WhyUs() {
       return;
     }
     try {
-      await axios.delete(`http://localhost:5005/${lastSegment}/${id}`);
+      await axios.delete(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${id}`
+      );
       setAboutCards((prev) => prev.filter((_, i) => i !== index));
       toast.success("تم حذف البيانات بنجاح!");
     } catch (err) {
@@ -210,7 +212,7 @@ export default function WhyUs() {
   const fetchAboutByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `http://localhost:5005/category/${category}`
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/category/${category}`
       );
       return response.data; // expecting array of about cards
     } catch (err) {
@@ -259,7 +261,10 @@ export default function WhyUs() {
         </AnimatedContent>
         <img src={paperwork} alt="" />
       </div>
-      <button onClick={() => setShowDialog(true)} className="addSlide">
+      <button
+        onClick={() => setShowDialog((prev) => !prev)}
+        className="addSlide"
+      >
         {add}
       </button>
 

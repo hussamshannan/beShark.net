@@ -132,7 +132,7 @@ export default function Schools() {
     formData.append("category", lastSegment);
 
     const response = await axios.post(
-      "http://localhost:5005/slides",
+      "https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides",
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -146,7 +146,7 @@ export default function Schools() {
   const deleteCustomSlide = async (id) => {
     try {
       // Call backend to delete by id
-      await axios.delete(`http://localhost:5005/slides/${id}`);
+      await axios.delete(`https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/${id}`);
 
       // Remove from state
       setCustomSlides((prev) => prev.filter((slide) => slide._id !== id));
@@ -159,7 +159,7 @@ export default function Schools() {
   const fetchSlidesByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `http://localhost:5005/slides/category/${category}`
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/category/${category}`
       );
       return response.data; // slides array
     } catch (err) {
@@ -191,7 +191,7 @@ export default function Schools() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5005/slides/${id}`,
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/${id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

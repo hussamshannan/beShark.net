@@ -13,7 +13,7 @@ import WhyUs from "./pages/WhyUs.jsx";
 import Factories from "./pages/feasibility-studies/Factories.jsx";
 import Restaurants from "./pages/feasibility-studies/restaurants.jsx";
 import Schools from "./pages/feasibility-studies/Schools.jsx";
-import Farms from "./pages/feasibility-studies/farms.jsx";
+import Farms from "./pages/feasibility-studies/Farms.jsx";
 import E_commerce_projects from "./pages/feasibility-studies/E-commerce-projects.jsx";
 import Medical_sector from "./pages/feasibility-studies/Medical-sector.jsx";
 import Other_projects from "./pages/feasibility-studies/Other-projects.jsx";
@@ -23,6 +23,8 @@ import Previous_works from "./pages/Previous_works.jsx";
 import Feasibility_studies from "./pages/Feasibility-studies.jsx";
 import Mobile_nav from "./components/mobile_nav.jsx";
 import Dialog from "./components/Dialog.jsx";
+import Edit from "./components/Edit.jsx";
+import Emails from "./pages/Emails.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
@@ -46,10 +48,12 @@ createRoot(document.getElementById("root")).render(
         <Route path="/files-management" element={<Files_management />} />
         <Route path="/previous-works" element={<Previous_works />} />
         <Route path="/feasibility-studies" element={<Feasibility_studies />} />
+        <Route path="/contact-request" element={<Emails />} />
       </Routes>
       <Footer />
       <Mobile_nav />
       <Dialog />
+      <Edit />
     </BrowserRouter>
   </StrictMode>
 );

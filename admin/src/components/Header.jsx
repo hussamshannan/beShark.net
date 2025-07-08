@@ -157,7 +157,7 @@ export default function Header() {
             <Link to="/previous-works">سابقة الأعمال</Link>
           </li>
           <li>
-            <Link onClick={openDialog}>طلب تواصل</Link>
+            <Link to="/contact-request">طلب تواصل</Link>
           </li>
           <li>
             <Link
@@ -213,14 +213,16 @@ export default function Header() {
                   <p>عنا</p>
                   <span></span>
                 </summary>
-                <ul>
-                  <li>
-                    <Link to="/about">عن شارِك للإستشارات</Link>
-                  </li>
-                  <li>
-                    <Link to="/why-us">لماذا شارِك للإستشارات؟</Link>
-                  </li>
-                </ul>
+                <div>
+                  <ul>
+                    <li>
+                      <Link to="/about">عن شارِك للإستشارات</Link>
+                    </li>
+                    <li>
+                      <Link to="/why-us">لماذا شارِك للإستشارات؟</Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               <div
@@ -233,31 +235,33 @@ export default function Header() {
                   <p>دراسات الجدوى</p>
                   <span></span>
                 </summary>
-                <ul>
-                  <li>
-                    <Link to="/factories">المصانع</Link>
-                  </li>
-                  <li>
-                    <Link to="/restaurants">المطاعم</Link>
-                  </li>
-                  <li>
-                    <Link to="/schools">المدارس</Link>
-                  </li>
-                  <li>
-                    <Link to="/farms">المزارع</Link>
-                  </li>
-                  <li>
-                    <Link to="/e-commerce-projects">
-                      مشروعات التجارة الالكترونية
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/medical-sector">القطاع الطبي</Link>
-                  </li>
-                  <li>
-                    <Link to="/other-projects">مشروعات اخرى</Link>
-                  </li>
-                </ul>
+                <div>
+                  <ul>
+                    <li>
+                      <Link to="/factories">المصانع</Link>
+                    </li>
+                    <li>
+                      <Link to="/restaurants">المطاعم</Link>
+                    </li>
+                    <li>
+                      <Link to="/schools">المدارس</Link>
+                    </li>
+                    <li>
+                      <Link to="/farms">المزارع</Link>
+                    </li>
+                    <li>
+                      <Link to="/e-commerce-projects">
+                        مشروعات التجارة الالكترونية
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/medical-sector">القطاع الطبي</Link>
+                    </li>
+                    <li>
+                      <Link to="/other-projects">مشروعات اخرى</Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               <li>
@@ -270,6 +274,9 @@ export default function Header() {
               </li>
               <li>
                 <Link to="/previous-works">سابقة الاعمال</Link>
+              </li>
+              <li>
+                <Link to="/contact-request">طلب تواصل</Link>
               </li>
             </ul>
           </nav>

@@ -19,7 +19,7 @@ body {
       height: 94.5dvh;
       isolation: isolate;
       // transition: all 0.3s ease !important;
-      
+
       .bg-video {
         position: absolute;
         z-index: -1;
@@ -27,7 +27,7 @@ body {
         width: 100%;
         height: 100%;
         @include flex(center, center, row, 0rem);
-        
+
         video {
           width: 100%;
           height: 100%;
@@ -260,7 +260,7 @@ body {
     .feedback {
       width: 100%;
       padding: 1.5rem 1rem;
-      background: linear-gradient(45deg,#30496b,#30b8d2);
+      background: linear-gradient(45deg, #30496b, #30b8d2);
       @include flex(center, center, column, 3rem);
       .feedback-header {
         width: 100%;
@@ -406,24 +406,118 @@ body {
       position: relative;
       @include flex(center, flex-start, column, 1rem);
       padding: calc(1rem + 2vw);
+      .top {
+        width: 100%;
+        @include flex(center, flex-start, row, 0.5rem);
+        button {
+          background: var(--primary-clr);
+          border: none;
+          border-radius: 50%;
+          display: grid;
+          place-content: center;
+          width: 50px;
+          aspect-ratio: 1/1;
+          outline: none;
+          svg {
+            fill: var(--light-svg-clr);
+          }
+        }
+      }
+      .Dialog-questions {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(300px, 100%, 416px);
+        min-height: 400px; // or any base height
+        margin-bottom: 90px;
+        // margin-top: 1vw;
+        background: var(--body-bg-clr);
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 1.2rem;
+        // padding-block: 5rem;
+        padding-bottom: 1.2rem;
+        @include flex(center, center, column, 1rem);
+        isolation: isolate;
+        z-index: 1000;
+        input {
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid var(--body-bg-clr-gray);
+        }
+        .top {
+          width: 100%;
+
+          h2 {
+            width: 100%;
+            font-size: var(--font-h3);
+            font-family: var(--arabic-fm-exb);
+            color: var(--primary-clr);
+            text-align: center;
+          }
+        }
+        .title {
+          position: relative;
+          width: 90%;
+          h2,
+          input {
+            width: 100%;
+            font-size: var(--font-h4);
+            color: var(--txt-clr);
+            font-family: var(--arabic-fm-exb);
+            padding: 0.2rem;
+          }
+        }
+        .text {
+          position: relative;
+          width: 90%;
+          textarea {
+            width: 100% !important;
+            max-height: 350px;
+            height: 250px;
+            min-height: 100px;
+            background: transparent;
+            border-radius: var(--border-radius);
+            text-align: justify;
+            font-family: var(--arabic-fm-r);
+            font-size: var(--font-body);
+            border: 1px solid var(--body-bg-clr-gray);
+            padding: 0.5rem;
+          }
+        }
+        .btns {
+          width: 100%;
+          @include flex(center, space-evenly, row, 1rem);
+          padding: 1rem;
+          button {
+            font-family: var(--arabic-fm-r);
+            background: transparent;
+            border-radius: var(--border-radius);
+            background: transparent;
+            border: 2px solid var(--body-bg-clr-gray);
+          }
+        }
+      }
       > .text {
         position: relative;
         width: clamp(300px, 100%, 700px);
-        @include flex(flex-start, flex-start, column, 1rem);
+        @include flex(flex-start, flex-start, column, 0rem);
         background: var(--body-bg-clr);
-        border-radius: var(--border-radius);
+        border-radius: 1rem;
         padding-bottom: 0;
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         .question {
           position: relative;
           cursor: pointer;
           width: 100%;
+          height: 100%;
           @include flex(center, space-between, row, 1rem);
-          border-bottom: 1px solid var(--body-bg-clr-gray);
           padding: 1.5rem;
-          padding-bottom: 0.5rem;
+          // padding-bottom: 0.5rem;
           isolation: isolate;
           h4 {
+            flex-grow: 1;
             font-family: var(--arabic-fm-exb);
             font-size: var(--font-h4);
             color: var(--txt-clr);
@@ -435,6 +529,7 @@ body {
 
             svg {
               fill: var(--dark-svg-clr);
+              transition: transform 0.5s ease;
             }
           }
           &:after {
@@ -452,27 +547,61 @@ body {
             transition: opacity 0.5s ease;
           }
           &.open {
+            span {
+              svg {
+                fill: var(--light-svg-clr);
+              }
+            }
             &:after {
               opacity: 1;
             }
           }
         }
         .answer {
+          border-top: 1px solid var(--body-bg-clr-gray);
           width: 100%;
           position: relative;
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: all 0.5s ease !important;
+          padding-inline: 1rem;
           overflow: hidden;
-          transition: max-height 0.5s ease !important;
-          padding-inline: 1.5rem;
+          div {
+            overflow: hidden;
+            p {
+              text-align: justify;
+              white-space: pre-wrap;
+              font-family: var(--arabic-fm-r);
+              font-size: var(--font-body);
+              color: var(--txt-clr-gray);
+              padding: 0.5rem;
+              padding-bottom: 1.5rem;
+              overflow-y: scroll;
+              overflow: hidden;
+            }
+          }
 
-          p {
-            text-align: justify;
-            white-space: pre-wrap;
-            font-family: var(--arabic-fm-r);
-            font-size: var(--font-body);
-            color: var(--txt-clr-gray);
-            padding-bottom: 1.5rem;
-            max-height: 400px;
-            overflow-y: scroll;
+          &.open {
+            grid-template-rows: 1fr !important;
+          }
+          .actions {
+            width: 100% !important;
+            padding: 0.5rem 1rem;
+            @include flex(center, space-evenly, row, 1rem);
+            button {
+              background: var(--primary-clr);
+              border-radius: var(--border-radius);
+              color: var(--txt-clr-light);
+              outline: none;
+              font-family: var(--arabic-fm-exb);
+              font-size: var(--font-h4);
+              padding: 0.5rem 1rem;
+            }
+            .modify {
+              background: var(--body-bg-clr);
+              color: var(--txt-clr);
+              border: 1px solid var(--body-bg-clr-gray);
+            }
           }
         }
       }
@@ -882,6 +1011,3 @@ body {
     background-image: url("../../icons/arrow-left.svg");
   }
 }
-
-
-

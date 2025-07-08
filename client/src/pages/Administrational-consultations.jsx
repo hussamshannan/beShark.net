@@ -24,7 +24,7 @@ export default function Administrational_consultations() {
   const fetchSlidesByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `http://localhost:5005/slides/category/${category}`
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/category/${category}`
       );
       return response.data; // slides array
     } catch (err) {

@@ -323,7 +323,6 @@
             @include flex(flex-end, flex-start, column, 0.2rem);
             list-style: none;
             font-family: var(--arabic-fm-r);
-
             li {
               position: relative;
               width: 100%;
@@ -391,30 +390,33 @@
                   }
                 }
               }
-              ul {
-                interpolate-size: allow-keywords !important;
-                transition-behavior: allow-discrete !important;
-                height: 0px;
-                transition: height 0.5s ease-in-out;
+              div {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: all 0.5s ease-in-out;
                 overflow: hidden;
-                li {
+                opacity: 0;
+                ul {
                   overflow: hidden;
-                  border-top: 0.5px solid lightgray;
-                  border-bottom: none;
-                  padding: 0.5rem 0.5rem;
-                  font-family: var(--arabic-fm-r);
-
-                  &:nth-last-child(1) {
+                  li {
+                    overflow: hidden;
                     border-top: 0.5px solid lightgray;
-                    border-bottom: 0px solid lightgray;
-                  }
-                  a {
-                    color: var(--txt-clr);
-                    transition: color 0.3s ease;
-                  }
-                  &:hover {
+                    border-bottom: none;
+                    padding: 0.5rem 0.5rem;
+                    font-family: var(--arabic-fm-r);
+
+                    &:nth-last-child(1) {
+                      border-top: 0.5px solid lightgray;
+                      border-bottom: 0px solid lightgray;
+                    }
                     a {
-                      color: var(--primary-clr);
+                      color: var(--txt-clr);
+                      transition: color 0.3s ease;
+                    }
+                    &:hover {
+                      a {
+                        color: var(--primary-clr);
+                      }
                     }
                   }
                 }
@@ -424,8 +426,9 @@
                 display: none;
               }
               &.active {
-                ul {
-                  height: auto;
+                div {
+                  grid-template-rows: 1fr;
+                  opacity: 1;
                 }
                 summary {
                   span {

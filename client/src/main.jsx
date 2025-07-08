@@ -13,7 +13,7 @@ import WhyUs from "./pages/WhyUs.jsx";
 import Factories from "./pages/feasibility-studies/Factories.jsx";
 import Restaurants from "./pages/feasibility-studies/restaurants.jsx";
 import Schools from "./pages/feasibility-studies/Schools.jsx";
-import Farms from "./pages/feasibility-studies/farms.jsx";
+import Farms from "./pages/feasibility-studies/Farms.jsx";
 import E_commerce_projects from "./pages/feasibility-studies/E-commerce-projects.jsx";
 import Medical_sector from "./pages/feasibility-studies/Medical-sector.jsx";
 import Other_projects from "./pages/feasibility-studies/Other-projects.jsx";

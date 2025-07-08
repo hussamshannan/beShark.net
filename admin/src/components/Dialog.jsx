@@ -66,7 +66,10 @@ export default function Dialog() {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:5005/send", formData);
+      const response = await axios.post(
+        "https://jadwa-study-backend.netlify.app/.netlify/functions/app/email/send",
+        formData
+      );
       toast.success("تم إرسال البيانات بنجاح");
       console.log("Server response:", response.data);
 

@@ -26,7 +26,7 @@ router.post("/send", async (req, res) => {
         <p>لديك طلب تواصل جديد:</p>
         <p><strong>الاسم:</strong> ${name}</p>
         <p><strong>البريد الإلكتروني:</strong> ${email}</p>
-        <p><strong>رقم الهاتف:</strong> +${phone}</p>
+        <p><strong>رقم الهاتف:</strong> ${phone}+</p>
       </div>
     `,
   };
@@ -50,8 +50,8 @@ router.post("/send", async (req, res) => {
   };
 
   try {
-    await EmailSchema.create({ name, email, phone });
-
+    const schema = new EmailSchema({ name, email, phone });
+    await schema.save();
     // Send admin email
     const adminInfo = await transporter.sendMail(adminMailOptions);
     console.log("Admin email sent:", adminInfo.messageId);

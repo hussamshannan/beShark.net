@@ -1,26 +1,69 @@
 @charset "UTF-8";
 @font-face {
-  font-family: "arabic_ExtraBold";
-  src: url("../../fonts/Almarai/Almarai-ExtraBold.ttf");
+  font-family: "arabic_Regular_1";
+  src: url("../../fonts/Almarai/Almarai-Regular.ttf");
 }
 @font-face {
-  font-family: "arabic_bold";
+  font-family: "arabic_bold_1";
   src: url("../../fonts/Almarai/Almarai-Bold.ttf");
 }
 @font-face {
-  font-family: "arabic_light";
-  src: url("../../fonts/Almarai/Almarai-Light.ttf");
+  font-family: "arabic_ExtraBold_1";
+  src: url("../../fonts/Almarai/Almarai-ExtraBold.ttf");
 }
 @font-face {
-  font-family: "arabic_Regular";
-  src: url("../../fonts/Almarai/Almarai-Regular.ttf");
+  font-family: "arabic_Regular_2";
+  src: url("../../fonts/Rubik/static/Rubik-Regular.ttf");
+}
+@font-face {
+  font-family: "arabic_bold_2";
+  src: url("../../fonts/Rubik/static/Rubik-Bold.ttf");
+}
+@font-face {
+  font-family: "arabic_ExtraBold_2";
+  src: url("../../fonts/Rubik/static/Rubik-ExtraBold.ttf");
+}
+@font-face {
+  font-family: "arabic_Regular_3";
+  src: url("../../fonts/Fustat/static/Fustat-Regular.ttf");
+}
+@font-face {
+  font-family: "arabic_bold_3";
+  src: url("../../fonts/Fustat/static/Fustat-Bold.ttf");
+}
+@font-face {
+  font-family: "arabic_ExtraBold_3";
+  src: url("../../fonts/Fustat/static/Fustat-ExtraBold.ttf");
+}
+@font-face {
+  font-family: "arabic_Regular_4";
+  src: url("../../fonts/Mada/static/Mada-Regular.ttf");
+}
+@font-face {
+  font-family: "arabic_bold_4";
+  src: url("../../fonts/Mada/static/Mada-Bold.ttf");
+}
+@font-face {
+  font-family: "arabic_ExtraBold_4";
+  src: url("../../fonts/Mada/static/Mada-ExtraBold.ttf");
+}
+@font-face {
+  font-family: "arabic_Regular_5";
+  src: url("../../fonts/Tajawal/Tajawal-Regular.ttf");
+}
+@font-face {
+  font-family: "arabic_bold_5";
+  src: url("../../fonts/Tajawal/Tajawal-Bold.ttf");
+}
+@font-face {
+  font-family: "arabic_ExtraBold_5";
+  src: url("../../fonts/Tajawal/Tajawal-ExtraBold.ttf");
 }
 :root {
   /* Fonts */
-  --arabic-fm-exb: arabic_ExtraBold;
-  --arabic-fm-l: arabic_light;
-  --arabic-fm-r: arabic_Regular;
-  --arabic-fm-b: arabic_bold;
+  --arabic-fm-r: arabic_Regular_1;
+  --arabic-fm-b: arabic_bold_1;
+  --arabic-fm-exb: arabic_ExtraBold_1;
   /* Base sizes - Mobile First */
   --font-hero: clamp(2rem, 5vw + 1rem, 2.5rem); /* 32px → 40px */
   --font-h1: clamp(1.75rem, 4vw + 0.5rem, 2rem); /* 28px → 32px */
@@ -489,36 +532,40 @@
     transform: translate(-50%, -50%);
     transition: all 0.3s ease;
   }
-  .main_header > .side .bottom nav ul .details ul {
-    interpolate-size: allow-keywords !important;
-    transition-behavior: allow-discrete !important;
-    height: 0px;
-    transition: height 0.5s ease-in-out;
+  .main_header > .side .bottom nav ul .details div {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
+    opacity: 0;
+  }
+  .main_header > .side .bottom nav ul .details div ul {
     overflow: hidden;
   }
-  .main_header > .side .bottom nav ul .details ul li {
+  .main_header > .side .bottom nav ul .details div ul li {
     overflow: hidden;
     border-top: 0.5px solid lightgray;
     border-bottom: none;
     padding: 0.5rem 0.5rem;
     font-family: var(--arabic-fm-r);
   }
-  .main_header > .side .bottom nav ul .details ul li:nth-last-child(1) {
+  .main_header > .side .bottom nav ul .details div ul li:nth-last-child(1) {
     border-top: 0.5px solid lightgray;
     border-bottom: 0px solid lightgray;
   }
-  .main_header > .side .bottom nav ul .details ul li a {
+  .main_header > .side .bottom nav ul .details div ul li a {
     color: var(--txt-clr);
     transition: color 0.3s ease;
   }
-  .main_header > .side .bottom nav ul .details ul li:hover a {
+  .main_header > .side .bottom nav ul .details div ul li:hover a {
     color: var(--primary-clr);
   }
   .main_header > .side .bottom nav ul .details summary::-webkit-details-marker {
     display: none;
   }
-  .main_header > .side .bottom nav ul .details.active ul {
-    height: auto;
+  .main_header > .side .bottom nav ul .details.active div {
+    grid-template-rows: 1fr;
+    opacity: 1;
   }
   .main_header > .side .bottom nav ul .details.active summary span::after {
     transform: translate(-50%, -50%) rotate(90deg);

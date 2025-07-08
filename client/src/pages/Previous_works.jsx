@@ -30,7 +30,7 @@ export default function Previous_works() {
   const fetchAboutByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `http://localhost:5005/category/${category}`
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/category/${category}`
       );
       return response.data; // expecting array of about cards
     } catch (err) {

@@ -213,14 +213,16 @@ export default function Header() {
                   <p>عنا</p>
                   <span></span>
                 </summary>
-                <ul>
-                  <li>
-                    <Link to="/about">عن شارِك للإستشارات</Link>
-                  </li>
-                  <li>
-                    <Link to="/why-us">لماذا شارِك للإستشارات؟</Link>
-                  </li>
-                </ul>
+                <div>
+                  <ul>
+                    <li>
+                      <Link to="/about">عن شارِك للإستشارات</Link>
+                    </li>
+                    <li>
+                      <Link to="/why-us">لماذا شارِك للإستشارات؟</Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               <div
@@ -233,6 +235,7 @@ export default function Header() {
                   <p>دراسات الجدوى</p>
                   <span></span>
                 </summary>
+                <div>
                 <ul>
                   <li>
                     <Link to="/factories">المصانع</Link>
@@ -258,6 +261,7 @@ export default function Header() {
                     <Link to="/other-projects">مشروعات اخرى</Link>
                   </li>
                 </ul>
+                </div>
               </div>
 
               <li>

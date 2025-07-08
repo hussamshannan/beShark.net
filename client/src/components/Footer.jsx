@@ -41,7 +41,7 @@ export default function Footer() {
         <div className="bottom">
           <div className="copyright">
             <p>
-              حقوق الطبع والنشر © {currentYear}
+              حقوق الطبع والنشر 
               <span> شارِك للإستشارات </span>. جميع الحقوق محفوظة
             </p>
           </div>
@@ -49,9 +49,9 @@ export default function Footer() {
             <p>
               تم التصميم بواسطة
               <Link
-                to={"https://www.linkedin.com/in/hussam-shannan-47071b291/"}
+                to={"/"}
               >
-                hussam shannan
+                {/* hussam shannan */}
               </Link>
             </p>
           </div>

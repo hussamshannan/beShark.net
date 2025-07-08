@@ -24,7 +24,7 @@ export default function Files_management() {
   const fetchSlidesByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `http://localhost:5005/slides/category/${category}`
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/category/${category}`
       );
       return response.data; // slides array
     } catch (err) {
@@ -47,6 +47,7 @@ export default function Files_management() {
         </AnimatedContent>
         <img src={paperwork} alt="" />
       </div>
+      
       <div className="slides">
         {customSlides.map((slide, index) => (
           <div className="slide" key={slide._id || `custom_${index}`}>

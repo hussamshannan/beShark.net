@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "./assets/style/app/app.css";
@@ -22,10 +22,17 @@ import heroVideo from "./assets/videos/herobanner_full.mp4";
 import feasibility_studies from "./assets/videos/feasibility_studies.mp4";
 import administrational_consultations from "./assets/videos/administrational_consultations.mp4";
 import files_management from "./assets/videos/files_management.mp4";
+
 import { motion } from "framer-motion";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [openIndex, setOpenIndex] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [aboutData, setAboutData] = useState({});
+  const [aboutCards, setAboutCards] = useState([]);
 
   const toggleAnswer = (index) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -61,6 +68,158 @@ function App() {
       console.log("Edited Content:", updated);
       return updated;
     });
+  };
+  const add = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="#000000"
+    >
+      <path d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" />
+    </svg>
+  );
+  // Handler for text changes inside aboutCards contentEditable fields
+  const handleAboutTextChange = (index, key, value) => {
+    setAboutCards((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [key]: value } : item))
+    );
+  };
+  // Add new aboutData card (optimistic UI, then send to backend)
+  const addCustomAbout = async () => {
+    const { answer, question } = aboutData;
+
+    if (!answer || !question) {
+      toast.warn("يرجى تعبئة جميع الحقول المطلوبة!");
+      return;
+    }
+
+    const tempId = Date.now().toString();
+    const tempAbout = {
+      _id: tempId,
+      answer,
+      question,
+    };
+
+    // Add to list (optimistic)
+    setAboutCards((prev) => [...prev, tempAbout]);
+    setShowDialog(false);
+    setAboutData({
+      _id: null,
+      answer: "",
+      question: "",
+    });
+
+    try {
+      // Upload to server
+      const saved = await sendAboutToServer(tempAbout);
+
+      // Replace temp with saved from server (keep preview img)
+      setAboutCards((prev) =>
+        prev.map((item) => (item._id === tempId ? { ...saved } : item))
+      );
+      toast.success("تم حفظ البيانات بنجاح!");
+    } catch (error) {
+      // Remove temp on failure
+      setAboutCards((prev) => prev.filter((item) => item._id !== tempId));
+      toast.error("فشل حفظ البيانات في الخادم.");
+      console.error("Upload error:", error);
+    }
+  };
+
+  // Send about card to server (POST if no _id, else PUT)
+  const sendAboutToServer = async (about) => {
+    const formData = new FormData();
+    formData.append("answer", about.answer);
+    formData.append("question", about.question);
+
+    let response;
+    if (about._id && about._id.toString().length !== 13) {
+      // existing (assumption: tempId is timestamp 13 chars)
+      response = await axios.put(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/question/${about._id}`,
+        about
+      );
+    } else {
+      response = await axios.post(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/question`,
+        about
+      );
+    }
+
+    return response.data;
+  };
+  // Delete about card by index
+  const deleteAbout = async (index) => {
+    const id = aboutCards[index]._id;
+    if (!id) {
+      // just remove local if no id (probably temp)
+      setAboutCards((prev) => prev.filter((_, i) => i !== index));
+      return;
+    }
+    try {
+      await axios.delete(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/question/${id}`
+      );
+      setAboutCards((prev) => prev.filter((_, i) => i !== index));
+      toast.success("تم حذف البيانات بنجاح!");
+    } catch (err) {
+      toast.error("فشل حذف البيانات.");
+      console.error("Delete about error:", err);
+    }
+  };
+  // Modify about card by index: send PUT to backend
+  const modifyAbout = async (index) => {
+    const about = aboutCards[index];
+    try {
+      const updated = await sendAboutToServer(about);
+      // Update local card with server data, keep preview img
+      setAboutCards((prev) =>
+        prev.map((item, i) =>
+          i === index ? { ...updated, img: about.img, imgFile: null } : item
+        )
+      );
+      toast.success("تم تعديل البيانات بنجاح!");
+    } catch (err) {
+      toast.error("فشل تعديل البيانات.");
+      console.error("Modify about error:", err);
+    }
+  };
+
+  const fetchAboutByCategory = async () => {
+    try {
+      const response = await axios.get(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/question`
+      );
+      return response.data; // expecting array of about cards
+    } catch (err) {
+      console.error("Failed to fetch about data:", err);
+      return [];
+    }
+  };
+  useEffect(() => {
+    fetchAboutByCategory().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        // Normalize to keep imgUrl as img and no imgFile
+        const normalized = data.map((item) => ({
+          ...item,
+        }));
+        setAboutCards(normalized);
+      }
+    });
+  }, []);
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.2,
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    }),
   };
   return (
     <motion.div
@@ -393,149 +552,125 @@ function App() {
         </AnimatedContent>
       </div>
       <div className="commonQuestion">
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
+        <div className="top">
+          <button
+            onClick={() => setShowDialog((prev) => !prev)}
+            className="addSlide"
+          >
+            {add}
+          </button>
+        </div>
+        {showDialog && (
+          <div className="Dialog-questions">
+            <div className="top">
+              <h2>اضافة سؤال</h2>
+            </div>
+            <div className="title">
+              <input
+                type="text"
+                value={aboutData.question || ""}
+                onChange={(e) =>
+                  setAboutData((prev) => ({
+                    ...prev,
+                    question: e.target.value,
+                  }))
+                }
+                placeholder="سؤال"
+              />
+            </div>
+            <div className="text">
+              <textarea
+                value={aboutData.answer || ""}
+                onChange={(e) =>
+                  setAboutData((prev) => ({
+                    ...prev,
+                    answer: e.target.value,
+                  }))
+                }
+                placeholder="اجابة"
+                style={{ whiteSpace: "pre-wrap" }}
+              />
+            </div>
+            <div className="btns">
+              <button onClick={addCustomAbout}>حفظ</button>
+              <button onClick={() => setShowDialog((prev) => !prev)}>
+                إغلاق
+              </button>
+            </div>
+          </div>
+        )}
+
+        {aboutCards.map((about, index) => (
+          <motion.div
+            className="text"
+            key={index}
+            custom={index}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={cardVariants}
+          >
             <div
-              className={`question ${openIndex === 0 ? "open" : ""}`}
-              onClick={() => toggleAnswer(0)}
+              className={`question ${openIndex === index ? "open" : ""}`}
+              onClick={() => toggleAnswer(index)}
             >
-              <h4>هل دراسة الجدوى مخصصة للتقديم إلى وزارة أو هيئة حكومية؟</h4>
+              <h4
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) =>
+                  handleAboutTextChange(index, "question", e.target.innerText)
+                }
+              >
+                {about.question}
+              </h4>
               <span
                 style={{
                   transform:
-                    openIndex === 0 ? "rotate(180deg)" : "rotate(0deg)",
+                    openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
                 }}
               >
                 {arrowDown}
               </span>
             </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 0 ? "400px" : "0",
-              }}
-            >
-              <p>
-                بالتأكيد حيث ان إعداد دراسة الجدوى يتطلب معرفة الجهة الموجه
-                اليها دراسة الجدوى وعند ارسال طلب الخدمة من قبلكم يتم التواصل
-                معكم بشأن الجهة الموجه اليها دراسة الجدوى سواء كانت وزارة أو
-                هيئة أو كانت لتقديمها إلى مستثمر للتمويل أو غير ذلك وبناء على
-                ذلك يتم إعداد دراسة الجدوى طبقا لمتطلبات هذه الجهة وآلية عمل
-                دراسات الجدوى الخاصة بها
-              </p>
+            <div className={`answer ${openIndex === index ? "open" : ""}`}>
+              <div>
+                <p
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) =>
+                    handleAboutTextChange(index, "answer", e.target.innerText)
+                  }
+                >
+                  {about.answer}
+                </p>
+
+                <div className="actions">
+                  <button onClick={() => deleteAbout(index)} className="delete">
+                    حذف
+                  </button>
+                  <button onClick={() => modifyAbout(index)} className="modify">
+                    تعديل
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </AnimatedContent>
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
-            <div
-              className={`question ${openIndex === 1 ? "open" : ""}`}
-              onClick={() => toggleAnswer(1)}
-            >
-              <h4>ما هي محتويات دراسة الجدوى التي تقدمونها؟</h4>
-              <span
-                style={{
-                  transform:
-                    openIndex === 1 ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                {arrowDown}
-              </span>
-            </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 1 ? "400px" : "0",
-              }}
-            >
-              <p>
-                تحتوي دراسة الجدوى لاي مشروع على : اولا دراسة السوق للمشروع
-                وبيان المنافسين وحجم الاستيراد للمنتجات ان وجدت وبيان حجم الطلب
-                والعرض والفجوة السوقية والحصة السوقية للمشروع والتحليل المقارن.
-                ثانيا: الدراسة الفنية والإدارية حيث تحتوي على كافة بيانات تشغيل
-                المشروع الفنية من الات ومعدات ومصادرها واسعارها والمواد الخام
-                ومصدرها واسعارها بالاضافة إلى الهيكل التنظيمي للمشروع وبيان
-                الفريق الفني والوظيفي لفريق العمل ورواتبهم طبقا لمتوسط الرواتب
-                بالدولة المقدم لها المشروع بالاضافة إلى مقترحات اخرى فنية وتقنية
-                تخص آلية التشغيل للمشروع ثالثا: الدراسة المالية للمشروع ويتم
-                اعدادها بناء على دراسة السوق والدراسة الفنية والإدارية للمشروع
-                حيث يتم احتساب تكلفة المشروع الثابتة والمتغيرة بالاضافة إلى بيان
-                الايرادات والمصروفات خلال مدة من ثلاث إلى عشر سنوات (طبقا لنوع
-                المشروع ) بالاضافة إلى التحليل المالي للمشروع رابعا: فترة
-                التنفيذ يتم إعداد جدول التنفيذ للمشروع طبقا لكل مرحلة بناء على
-                ما سبق من معلومات تخص المشروع خامسا: تحليل المخاطر السوقية
-                والتشغيلية للمشروع وتحليل سوات
-              </p>
-            </div>
-          </div>
-        </AnimatedContent>
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
-            <div
-              className={`question ${openIndex === 2 ? "open" : ""}`}
-              onClick={() => toggleAnswer(2)}
-            >
-              <h4>هل من الممكن مناقشة دراسة الجدوى معكم بعد إستلامها؟</h4>
-              <span
-                style={{
-                  transform:
-                    openIndex === 2 ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                {arrowDown}
-              </span>
-            </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 2 ? "400px" : "0",
-              }}
-            >
-              <p>
-                يحق للعميل مناقشة دراسة الجدوى من خلال وسائل التواصل الموضحة
-                بموقع الشركة الإلكتروني أو من خلال الواتس اب الخاص بالشركة كما
-                يتم مراجعة كافة التقييمات بعد تقديمها للجهات الاخرى من قبل
-                العملاء واجراء التعديلات المطلوبة
-              </p>
-            </div>
-          </div>
-        </AnimatedContent>
-        <AnimatedContent threshold={0.5} delay={0.2} duration={1.2}>
-          <div className="text">
-            <div
-              className={`question ${openIndex === 3 ? "open" : ""}`}
-              onClick={() => toggleAnswer(3)}
-            >
-              <h4>كيف يتم تقديم خدمة الإستشارات الإدارية الدورية من قبلكم؟</h4>
-              <span
-                style={{
-                  transform:
-                    openIndex === 3 ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                {arrowDown}
-              </span>
-            </div>
-            <div
-              className="answer"
-              style={{
-                maxHeight: openIndex === 3 ? "400px" : "0",
-              }}
-            >
-              <p>
-                يتم التعاقد مع الشركة على إعداد إستشارات إدارية دورية (باسعار
-                تنافسية) حيث يتم إستلام البيانات التي نطلبها من قبلكم والعمل
-                عليها من خلال فريق العمل ومن ثم تقديم تقرير شهري يخص الشهر
-                السابق من بيانات مالية ومن ثم تقرير اخر شهري يخص الشهر القادم
-                والية العمل من خلاله ويتم إعداد التقييمات بناء على معدلات العمل
-                ومدى تطور المشروع وبعد تسليمكم التقرير يتم تحديد موعد مع المسؤول
-                بالشركة لديكم أو مع ادارة المشروع حسب رغبتكم ويتم مناقشة
-                التقارير بالتفصيل من خلال احد برامج التواصل بالتنسيق المسبق معكم
-              </p>
-            </div>
-          </div>
-        </AnimatedContent>
+          </motion.div>
+        ))}
       </div>
+
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        style={{ zIndex: 10000 }}
+      />
     </motion.div>
   );
 }
