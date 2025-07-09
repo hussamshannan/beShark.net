@@ -1,7 +1,7 @@
 import { React, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../assets/style/header/header.css";
-import logo from "../assets/images/logo_1.webp";
+import logo from "../assets/images/Logo_1.webp";
 
 export default function Header() {
   const [isSideOpen, setIsSideOpen] = useState(false);
@@ -172,9 +172,9 @@ export default function Header() {
         </ul>
       </nav>
 
-      <div className="logo">
+      <Link to="/" className="logo">
         <img src={logo} alt="logo" />
-      </div>
+      </Link>
 
       <div
         className="menu open"
@@ -190,9 +190,9 @@ export default function Header() {
 
       <div ref={sidebarRef} className={`side ${isSideOpen ? "show" : ""}`}>
         <div className="top">
-          <div className="logo">
+          <Link to="/" className="logo">
             <img src={logo} alt="logo" />
-          </div>
+          </Link>
           <div className="menu close" onClick={toggleSidebar}>
             {closeMenu}
           </div>
@@ -276,7 +276,7 @@ export default function Header() {
                 <Link to="/previous-works">سابقة الاعمال</Link>
               </li>
               <li>
-                <Link to="/contact-request">طلب تواصل</Link>
+                <Link to="/contact-request">سابقة الاعمال</Link>
               </li>
             </ul>
           </nav>

@@ -171,7 +171,9 @@ export default function Previous_works() {
       return;
     }
     try {
-      await axios.delete(`https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${id}`);
+      await axios.delete(
+        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${id}`
+      );
       setAboutCards((prev) => prev.filter((_, i) => i !== index));
       toast.success("تم حذف البيانات بنجاح!");
     } catch (err) {
@@ -261,7 +263,7 @@ export default function Previous_works() {
           <div className="top">
             <input
               type="text"
-              value={aboutData.topTitle}
+              value={aboutData.topTitle || " "}
               onChange={(e) =>
                 setAboutData((prev) => ({ ...prev, topTitle: e.target.value }))
               }
@@ -269,7 +271,7 @@ export default function Previous_works() {
             />
             <input
               type="text"
-              value={aboutData.topSubtitle}
+              value={aboutData.topSubtitle || " "}
               onChange={(e) =>
                 setAboutData((prev) => ({
                   ...prev,
@@ -280,10 +282,10 @@ export default function Previous_works() {
             />
           </div>
 
-          <div className="title">
+          <div className="title" style={{ display: "none" }}>
             <input
               type="text"
-              value={aboutData.sectionTitle}
+              value={aboutData.sectionTitle || " "}
               onChange={(e) =>
                 setAboutData((prev) => ({
                   ...prev,
@@ -315,7 +317,7 @@ export default function Previous_works() {
 
           <div className="text">
             <textarea
-              value={aboutData.description}
+              value={aboutData.description || " "}
               onChange={(e) =>
                 setAboutData((prev) => ({
                   ...prev,
@@ -369,22 +371,6 @@ export default function Previous_works() {
               >
                 {about.topSubtitle}
               </p>
-            </div>
-
-            <div className="title">
-              <h2
-                contentEditable
-                suppressContentEditableWarning
-                onBlur={(e) =>
-                  handleAboutTextChange(
-                    index,
-                    "sectionTitle",
-                    e.target.innerText
-                  )
-                }
-              >
-                {about.sectionTitle}
-              </h2>
             </div>
 
             <div className="img" style={{ position: "relative" }}>

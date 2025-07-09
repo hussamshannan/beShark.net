@@ -11,222 +11,20 @@ import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 
 export default function Emails() {
-  const path = window.location.pathname; // e.g. "/e-commerce-projects"
-  const lastSegment =
-    path.split("/").filter(Boolean).pop()?.toLowerCase() || "";
-
-  // State for single aboutData editing (in dialog)
-  const [aboutData, setAboutData] = useState({});
-
-  // State for multiple about cards list
-  const [aboutCards, setAboutCards] = useState([]);
-
-  const [showDialog, setShowDialog] = useState(false);
-
-  // SVG icons (reuse your add/addImage from before)
-  const add = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="24px"
-      viewBox="0 -960 960 960"
-      width="24px"
-      fill="#000000"
-    >
-      <path d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" />
-    </svg>
-  );
-  const addImage = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="24px"
-      viewBox="0 -960 960 960"
-      width="24px"
-      fill="#000000"
-    >
-      <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280q17 0 28.5 11.5T520-800q0 17-11.5 28.5T480-760H200v560h560v-280q0-17 11.5-28.5T800-520q17 0 28.5 11.5T840-480v280q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-400h-40q-17 0-28.5-11.5T600-720q0-17 11.5-28.5T640-760h40v-40q0-17 11.5-28.5T720-840q17 0 28.5 11.5T760-800v40h40q17 0 28.5 11.5T840-720q0 17-11.5 28.5T800-680h-40v40q0 17-11.5 28.5T720-600q-17 0-28.5-11.5T680-640v-40Z" />
-    </svg>
-  );
-
-  // Handler for image file input change inside aboutCards
-  const handleAboutImageChange = (e, index) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAboutCards((prev) =>
-          prev.map((item, i) =>
-            i === index ? { ...item, img: reader.result, imgFile: file } : item
-          )
-        );
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Handler for text changes inside aboutCards contentEditable fields
-  const handleAboutTextChange = (index, key, value) => {
-    setAboutCards((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, [key]: value } : item))
-    );
-  };
-
-  // Add new aboutData card (optimistic UI, then send to backend)
-  const addCustomAbout = async () => {
-    const { topTitle, topSubtitle, sectionTitle, description, img, imgFile } =
-      aboutData;
-
-    if (
-      !img ||
-      // !topTitle.trim() ||
-      // !sectionTitle.trim() ||
-      !description.trim()
-    ) {
-      toast.warn("يرجى تعبئة جميع الحقول المطلوبة!");
-      return;
-    }
-
-    const tempId = Date.now().toString();
-    const tempAbout = {
-      _id: tempId,
-      topTitle,
-      topSubtitle,
-      sectionTitle,
-      description,
-      img,
-      imgFile,
-    };
-
-    // Add to list (optimistic)
-    setAboutCards((prev) => [...prev, tempAbout]);
-    setShowDialog(false);
-    setAboutData({
-      _id: null,
-      topTitle: "",
-      topSubtitle: "",
-      sectionTitle: "",
-      img: "",
-      imgFile: null,
-      description: "",
-    });
-
-    try {
-      // Upload to server
-      const saved = await sendAboutToServer(tempAbout);
-
-      // Replace temp with saved from server (keep preview img)
-      setAboutCards((prev) =>
-        prev.map((item) =>
-          item._id === tempId
-            ? { ...saved, img: tempAbout.img, imgFile: null }
-            : item
-        )
-      );
-      toast.success("تم حفظ البيانات بنجاح!");
-    } catch (error) {
-      // Remove temp on failure
-      setAboutCards((prev) => prev.filter((item) => item._id !== tempId));
-      toast.error("فشل حفظ البيانات في الخادم.");
-      console.error("Upload error:", error);
-    }
-  };
-
-  // Send about card to server (POST if no _id, else PUT)
-  const sendAboutToServer = async (about) => {
-    const formData = new FormData();
-    formData.append("topTitle", about.topTitle);
-    formData.append("topSubtitle", about.topSubtitle);
-    formData.append("sectionTitle", about.sectionTitle);
-    formData.append("description", about.description);
-    formData.append("category", lastSegment);
-    if (about.imgFile) {
-      formData.append("img", about.imgFile);
-    }
-
-    let response;
-    if (about._id && about._id.toString().length !== 13) {
-      // existing (assumption: tempId is timestamp 13 chars)
-      response = await axios.put(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${about._id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-    } else {
-      response = await axios.post(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-    }
-
-    return response.data;
-  };
-
-  // Delete about card by index
-  const deleteAbout = async (index) => {
-    const id = aboutCards[index]._id;
-    if (!id) {
-      // just remove local if no id (probably temp)
-      setAboutCards((prev) => prev.filter((_, i) => i !== index));
-      return;
-    }
-    try {
-      await axios.delete(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${id}`
-      );
-      setAboutCards((prev) => prev.filter((_, i) => i !== index));
-      toast.success("تم حذف البيانات بنجاح!");
-    } catch (err) {
-      toast.error("فشل حذف البيانات.");
-      console.error("Delete about error:", err);
-    }
-  };
-
-  // Modify about card by index: send PUT to backend
-  const modifyAbout = async (index) => {
-    const about = aboutCards[index];
-    try {
-      const updated = await sendAboutToServer(about);
-      // Update local card with server data, keep preview img
-      setAboutCards((prev) =>
-        prev.map((item, i) =>
-          i === index ? { ...updated, img: about.img, imgFile: null } : item
-        )
-      );
-      toast.success("تم تعديل البيانات بنجاح!");
-    } catch (err) {
-      toast.error("فشل تعديل البيانات.");
-      console.error("Modify about error:", err);
-    }
-  };
-
-  // Fetch about cards by category
-  const fetchAboutByCategory = async (category) => {
-    try {
-      const response = await axios.get(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/category/${category}`
-      );
-      return response.data; // expecting array of about cards
-    } catch (err) {
-      console.error("Failed to fetch about data:", err);
-      return [];
-    }
-  };
+  const [emails, setEmails] = useState([]);
 
   useEffect(() => {
-    fetchAboutByCategory(lastSegment).then((data) => {
-      if (Array.isArray(data) && data.length > 0) {
-        // Normalize to keep imgUrl as img and no imgFile
-        const normalized = data.map((item) => ({
-          ...item,
-          img: item.imgUrl || "",
-          imgFile: null,
-        }));
-        setAboutCards(normalized);
-      }
-    });
-  }, [lastSegment]);
+    axios
+      .get(
+        "https://jadwa-study-backend.netlify.app/.netlify/functions/app/email/get"
+      )
+      .then((response) => {
+        setEmails(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching emails:", error);
+      });
+  }, []);
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i) => ({
@@ -256,7 +54,42 @@ export default function Emails() {
       </div>
 
       <div className="cards">
-        
+        <table
+          border="1"
+          cellPadding="8"
+          style={{
+            borderCollapse: "collapse",
+            fontFamily: "var(--arabic-fm-b)",
+            fontSize: "var(--font-small)",
+          }}
+        >
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+          <tbody>
+            {emails.map(({ _id, name, email, phone }, index) => (
+              <tr key={_id}>
+                <td style={{ padding: "0.5rem", paddingInline: "1.5rem" }}>
+                  {index + 1}
+                </td>
+                <td style={{ padding: "0.5rem", paddingInline: "1.5rem" }}>
+                  {name}
+                </td>
+                <td style={{ padding: "0.5rem", paddingInline: "1.5rem" }}>
+                  {email}
+                </td>
+                <td style={{ padding: "0.5rem", paddingInline: "1.5rem" }}>
+                  {phone}+
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <ToastContainer
