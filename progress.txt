@@ -181,6 +181,74 @@ LOCAL TEST RESULT:
   - Response returned immediately (not blocked)
   - Email notification sent in background
 
+--------------------------------------------------------------------------------
+10. MENU DATA INSERTED INTO DATABASE
+--------------------------------------------------------------------------------
+
+ENDPOINT: POST /menu/save (authenticated)
+
+DATA INSERTED:
+{
+  "home": "الرئيسية",
+  "aboutLabel": "عنا",
+  "about": "عن شارِك للإستشارات",
+  "whyUs": "لماذا شارِك للإستشارات؟",
+  "studies": "دراسات الجدوى",
+  "factories": "المصانع",
+  "restaurants": "المطاعم",
+  "schools": "المدارس",
+  "farms": "المزارع",
+  "ecommerce": "مشروعات التجارة الالكترونية",
+  "medical": "القطاع الطبي",
+  "others": "مشروعات اخرى",
+  "adminConsult": "إستشارات إدارية",
+  "filesMgmt": "إدارة الملفات",
+  "prevWork": "سابقة الأعمال",
+  "contact": "طلب تواصل",
+  "whatsapp": "WhatsApp"
+}
+
+RESPONSE: {"message":"Editable text updated","editableText":{...}}
+DATABASE ID: 69820e31bb1dda9ab290c76b
+
+--------------------------------------------------------------------------------
+11. TEXTCONTENT AND COLORS DATA INSERTED
+--------------------------------------------------------------------------------
+
+ISSUE: Admin panel getting 404 errors:
+  - GET /textContent 404 (Not Found)
+  - GET /colors/ 404 (Not Found)
+
+CAUSE: No data existed in database - routes return 404 when empty
+
+FIX: Inserted initial data for both collections
+
+[textContent] POST /textContent (form-data, authenticated)
+  DATA:
+    headerTitle: "شارِك للإستشارات"
+    headerDesc: "نقدم لك خدمات استشارية متكاملة لدراسات الجدوى والمشاريع"
+    card1Desc: "دراسات جدوى احترافية ومعتمدة"
+    card2Desc: "استشارات إدارية متخصصة"
+    card3Desc: "إدارة ملفات وتراخيص المشاريع"
+  DATABASE ID: 6982104a0299d5c23dec89a6
+
+[colors] POST /colors (JSON, authenticated)
+  DATA:
+    --primary-color: "#1a365d"
+    --secondary-color: "#2d3748"
+    --accent-color: "#38a169"
+    --background-color: "#ffffff"
+    --text-color: "#1a202c"
+    --text-light: "#718096"
+    --border-color: "#e2e8f0"
+    --header-bg: "#1a365d"
+    --footer-bg: "#1a365d"
+  DATABASE ID: 69820fe40299d5c23dec89a2
+
+VERIFICATION:
+  GET /textContent → 200 OK (returns data)
+  GET /colors/ → 200 OK (returns data)
+
 ================================================================================
 END OF SESSION LOG
 ================================================================================
