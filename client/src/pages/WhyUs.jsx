@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 //improt images
 import paperwork from "../assets/images/paperwork.jpg";
@@ -29,7 +29,7 @@ export default function WhyUs() {
   const fetchAboutByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/category/${category}`
+        `https://shark-consulting-net.onrender.com/category/${category}`
       );
       return response.data; // expecting array of about cards
     } catch (err) {
@@ -37,6 +37,25 @@ export default function WhyUs() {
       return [];
     }
   };
+ const [menuTxt, setmenuTxt] = useState({});
+   const [paperwork, setpaperwork] = useState({});
+
+   useEffect(() => {
+     try {
+       const savedMenu = localStorage.getItem("menuTxt");
+       const savepaperwork = localStorage.getItem("paperwork");
+       if (savedMenu && savedMenu !== "undefined") {
+         setmenuTxt(JSON.parse(savedMenu));
+       }
+       if (savepaperwork && savepaperwork !== "undefined") {
+         setpaperwork(JSON.parse(savepaperwork));
+       }
+     } catch (err) {
+       console.warn("Failed to parse saved menuTxt from localStorage:", err);
+       setmenuTxt({});
+     }
+   }, []);
+  
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i) => ({
@@ -60,9 +79,9 @@ export default function WhyUs() {
     >
       <div className="headerimg">
         <AnimatedContent delay={0.2} threshold={0} duration={2}>
-          <h1>لماذا شارِك للإستشارات؟</h1>
+          <h1>{menuTxt.whyUs}</h1>
         </AnimatedContent>
-        <img src={paperwork} alt="" />
+        <img src={paperwork.paperworkImage} alt="" />
       </div>
       <div className="cards">
         <h2>خبرتنا تمتد لـ اكثر من 13 عام في السوق الخليجي</h2>

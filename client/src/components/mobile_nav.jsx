@@ -1,8 +1,13 @@
-import { React, useState } from "react";
+import { React, useState, useRef, useEffect } from "react";
 
 import { Link } from "react-router-dom";
+
 export default function Mobile_nav() {
+  const [isSideOpen, setIsSideOpen] = useState(false);
+  const moreServeciesRef = useRef(null);
+  const toggleSidebar = () => setIsSideOpen((prev) => !prev);
   const [showMoreServices, setShowMoreServices] = useState(false);
+
   function openDialog() {
     const dialog = document.querySelector(".dialog");
     if (dialog) {
@@ -12,13 +17,23 @@ export default function Mobile_nav() {
       }, 10); // slight delay to allow reflow
     }
   }
-
-
-  
-
-  const toggleMoreServices = () => {
-    setShowMoreServices((prev) => !prev);
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isSideOpen &&
+        moreServeciesRef.current &&
+        !moreServeciesRef.current.contains(event.target)
+      ) {
+        setIsSideOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isSideOpen]);
 
   const home = (
     <svg
@@ -141,14 +156,27 @@ export default function Mobile_nav() {
       <path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
     </svg>
   );
+  const [menuTxt, setmenuTxt] = useState({});
+
+  useEffect(() => {
+    try {
+      const savedMenu = localStorage.getItem("menuTxt");
+      if (savedMenu && savedMenu !== "undefined") {
+        setmenuTxt(JSON.parse(savedMenu));
+      }
+    } catch (err) {
+      console.warn("Failed to parse saved menuTxt from localStorage:", err);
+      setmenuTxt({});
+    }
+  }, []);
   return (
     <nav className="mobile_nav">
       <ul>
         <Link to={"/"}>
           <span>{home}</span>
-          <p>الرئيسية</p>
+          <p>{menuTxt.home}</p>
         </Link>
-        <li className="open-moreServecies" onClick={toggleMoreServices}>
+        <li className="open-moreServecies" onClick={toggleSidebar}>
           <span>{services}</span>
           <p>
             خدماتنا <span>{arrowDown}</span>
@@ -160,34 +188,47 @@ export default function Mobile_nav() {
         </Link>
         <Link onClick={openDialog}>
           <span>{chat}</span>
-          <p>تواصل</p>
+          <p>{menuTxt.contact}</p>
         </Link>
         <Link
           to="https://wa.me/97455225488?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%D9%83%D9%85"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={toggleSidebar}
         >
           <span>{whatsApp}</span>
-          <p>WhatsApp</p>
+          <p>{menuTxt.whatsapp}</p>
         </Link>
       </ul>
-      <div className={`moreServecies ${showMoreServices ? "show" : "hide"}`}>
-        <div className="top">
-          <span className="close-moreServecies" onClick={toggleMoreServices}>
+      <div
+        ref={moreServeciesRef}
+        className={`moreServecies ${isSideOpen ? "show" : "hide"}`}
+      >
+        {/* <div className="top">
+          <span className="close-moreServecies" onClick={toggleSidebar}>
             {close}
           </span>
-        </div>
+        </div> */}
         <ul>
           <li>
-            <Link to={"/feasibility-studies"}>دراسات الجدوى</Link>
+            <Link onClick={toggleSidebar} to={"/feasibility-studies"}>
+              {menuTxt.studies}
+            </Link>
             <span>{clipboard}</span>
           </li>
           <li>
-            <Link to={"/Administrational-consultations"}>إستشارات إدارية</Link>
+            <Link
+              onClick={toggleSidebar}
+              to={"/Administrational-consultations"}
+            >
+              {menuTxt.adminConsult}
+            </Link>
             <span>{briefcase}</span>
           </li>
           <li>
-            <Link to={"/files-management"}>إدارة الملفات</Link>
+            <Link onClick={toggleSidebar} to={"/files-management"}>
+              {menuTxt.filesMgmt}
+            </Link>
             <span>{folder}</span>
           </li>
         </ul>

@@ -5,7 +5,7 @@ import paperwork from "../../assets/images/paperwork.jpg";
 import "../../assets/style/common/feasibility-studies.css";
 import AnimatedContent from "../../components/AnimatedContent";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axios from "../../axiosInstance";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -130,7 +130,7 @@ export default function Farms() {
     formData.append("category", lastSegment);
 
     const response = await axios.post(
-      "https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides",
+      "/slides",
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -144,7 +144,7 @@ export default function Farms() {
   const deleteCustomSlide = async (id) => {
     try {
       // Call backend to delete by id
-      await axios.delete(`https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/${id}`);
+      await axios.delete(`/slides/${id}`);
 
       // Remove from state
       setCustomSlides((prev) => prev.filter((slide) => slide._id !== id));
@@ -157,7 +157,7 @@ export default function Farms() {
   const fetchSlidesByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/category/${category}`
+        `/slides/category/${category}`
       );
       return response.data; // slides array
     } catch (err) {
@@ -189,7 +189,7 @@ export default function Farms() {
 
     try {
       const response = await axios.put(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/slides/${id}`,
+        `/slides/${id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -209,6 +209,24 @@ export default function Farms() {
       console.error("Modify error:", err);
     }
   };
+   const [menuTxt, setmenuTxt] = useState({});
+   const [paperwork, setpaperwork] = useState({});
+
+   useEffect(() => {
+     try {
+       const savedMenu = localStorage.getItem("menuTxt");
+       const savepaperwork = localStorage.getItem("paperwork");
+       if (savedMenu && savedMenu !== "undefined") {
+         setmenuTxt(JSON.parse(savedMenu));
+       }
+       if (savepaperwork && savepaperwork !== "undefined") {
+         setpaperwork(JSON.parse(savepaperwork));
+       }
+     } catch (err) {
+       console.warn("Failed to parse saved menuTxt from localStorage:", err);
+       setmenuTxt({});
+     }
+   }, []);
   return (
     <motion.div
       className="about-pages"
@@ -220,9 +238,11 @@ export default function Farms() {
     >
       <div className="headerimg">
         <AnimatedContent delay={0.2} threshold={0} duration={2}>
-          <h1>دراسات جدوى المزارع</h1>
+          <h1>
+            {menuTxt.studies} {menuTxt.farms}
+          </h1>
         </AnimatedContent>
-        <img src={paperwork} alt="" />
+        <img src={paperwork.paperworkImage} alt="" />
       </div>
       <button onClick={() => setShowDialog(true)} className="addSlide">
         {add}

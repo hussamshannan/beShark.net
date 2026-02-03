@@ -73,6 +73,7 @@
   --font-body: clamp(1rem, 1vw + 0.5rem, 1.1rem); /* 15.2px → 16px */
   --font-small: clamp(0.8rem, 0.75vw + 0.5rem, 0.875rem); /* 12.8px → 14px */
   --border-radius: 0.5rem; /* 8px */
+  --border-radius2: 1rem; /* 16px */
   /* Colors */
   --primary-clr: #ffba00;
   --primary-clr-light: #fdbf0d;
@@ -107,6 +108,7 @@
   interpolate-size: allow-keywords !important;
   transition-behavior: allow-discrete !important;
   color: var(--txt-clr);
+  will-change: opacity !important;
 }
 
 body {
@@ -115,6 +117,7 @@ body {
   min-height: 100dvh;
   overflow: overlay;
   overflow-x: hidden;
+  background: black;
 }
 body .container {
   position: relative;
@@ -159,7 +162,7 @@ body .container .hero .bg-video::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(31, 31, 31, 0.7);
+  background: rgba(31, 31, 31, 0.3);
 }
 body .container .hero .mySwiper {
   cursor: grab;
@@ -233,6 +236,11 @@ body .container .hero .mySwiper .swiper-slide .swipe-image .img img {
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+}
+body .container .hero .mySwiper .swiper-slide .swipe-image:not(:has(.img)) .text {
+  width: clamp(300px, 100%, 1500px);
+  min-height: 60vh;
+  text-align: center;
 }
 body .container section {
   width: 100%;
@@ -314,6 +322,12 @@ body .container section .card .text {
   isolation: isolate;
   overflow: hidden;
 }
+body .container section .card .text p,
+body .container section .card .text h1 {
+  width: 100%;
+  width: 100%;
+  transition: color 0.65s cubic-bezier(0.05, 0.2, 0.1, 1);
+}
 body .container section .card .text h1 {
   font-size: var(--font-h4);
   font-family: var(--arabic-fm-exb);
@@ -356,7 +370,8 @@ body .container section .card .text::before {
 body .container section .card:hover {
   transform: translateY(-0.5rem);
 }
-body .container section .card:hover .text {
+body .container section .card:hover .text h1,
+body .container section .card:hover .text p {
   color: var(--txt-clr-light);
 }
 body .container section .card:hover .text::after, body .container section .card:hover .text::before {
@@ -374,6 +389,53 @@ body .container section .thoumbnail img {
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: var(--border-radius);
+}
+body .container section .thoumbnail .playbutton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(50px + 2vw);
+  aspect-ratio: 1/1;
+  background: #fff;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+}
+body .container section .thoumbnail .playbutton span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  isolation: isolate;
+}
+body .container section .thoumbnail .playbutton:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  background: whitesmoke;
+  width: 0%;
+  opacity: 0;
+  aspect-ratio: 1/1;
+  content: "";
+  border-radius: 50%;
+  animation: click 2s ease infinite;
+}
+@keyframes click {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+  50% {
+    width: 140%;
+    opacity: 0.8;
+  }
+  100% {
+    width: 140%;
+    opacity: 0;
+  }
 }
 body .container .count {
   width: 100%;
@@ -769,6 +831,7 @@ body .dialog .contact label {
   justify-content: flex-start;
   flex-direction: column;
   gap: 1rem;
+  z-index: 2;
 }
 body .dialog .contact label input {
   width: 100%;
@@ -803,6 +866,17 @@ body .dialog.open {
 }
 body .dialog.open .contact {
   top: 0;
+}
+body .spinner {
+  width: 100dvw;
+  height: 100dvh;
+  background: var(--primary-clr);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-content: center;
+  z-index: 99999999999999;
 }
 
 @media (min-width: 990px) {
@@ -1024,6 +1098,9 @@ body .dialog.open .contact {
     justify-content: center;
     flex-direction: row-reverse;
     gap: 0rem;
+    width: -moz-min-content;
+    width: min-content;
+    text-align: center;
   }
   .mobile_nav ul a p span,
   .mobile_nav ul li p span {
@@ -1060,8 +1137,8 @@ body .dialog.open .contact {
     background: var(--body-bg-clr);
     padding: 1rem;
     bottom: 0;
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius2);
+    border-top-right-radius: var(--border-radius2);
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;

@@ -5,6 +5,7 @@ body {
   min-height: 100dvh;
   overflow: overlay;
   overflow-x: hidden;
+  background: black;
   .container {
     position: relative;
     width: 100dvw;
@@ -19,7 +20,7 @@ body {
       height: 94.5dvh;
       isolation: isolate;
       // transition: all 0.3s ease !important;
-      
+
       .bg-video {
         position: absolute;
         z-index: -1;
@@ -27,7 +28,7 @@ body {
         width: 100%;
         height: 100%;
         @include flex(center, center, row, 0rem);
-        
+
         video {
           width: 100%;
           height: 100%;
@@ -40,7 +41,7 @@ body {
           left: 0;
           width: 100%;
           height: 100%;
-          background: rgba(31, 31, 31, 0.7);
+          background: rgba(31, 31, 31, 0.3);
         }
       }
       .mySwiper {
@@ -100,6 +101,13 @@ body {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+              }
+            }
+            &:not(:has(.img)) {
+              .text {
+                width: clamp(300px, 100%, 1500px);
+                min-height: 60vh;
+                text-align: center;
               }
             }
           }
@@ -162,6 +170,12 @@ body {
           transition: color 0.65s cubic-bezier(0.05, 0.2, 0.1, 1);
           isolation: isolate;
           overflow: hidden;
+          p,
+          h1 {
+            width: 100%;
+            width: 100%;
+            transition: color 0.65s cubic-bezier(0.05, 0.2, 0.1, 1);
+          }
           h1 {
             font-size: var(--font-h4);
             font-family: var(--arabic-fm-exb);
@@ -205,7 +219,10 @@ body {
         &:hover {
           transform: translateY(-0.5rem);
           .text {
-            color: var(--txt-clr-light);
+            h1,
+            p {
+              color: var(--txt-clr-light);
+            }
             &::after,
             &::before {
               opacity: 1;
@@ -223,6 +240,54 @@ body {
           height: 100%;
           object-fit: cover;
           border-radius: var(--border-radius);
+        }
+        .playbutton {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: calc(50px + 2vw);
+          aspect-ratio: 1/1;
+          background: #fff;
+          display: grid;
+          place-content: center;
+          border-radius: 50%;
+
+          span {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-content: center;
+            isolation: isolate;
+          }
+          &:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            background: whitesmoke;
+            width: 0%;
+            opacity: 0;
+            aspect-ratio: 1/1;
+            content: "";
+            border-radius: 50%;
+            animation: click 2s ease infinite;
+          }
+          @keyframes click {
+            0% {
+              width: 0%;
+              opacity: 0;
+            }
+            50% {
+              width: 140%;
+              opacity: 0.8;
+            }
+            100% {
+              width: 140%;
+              opacity: 0;
+            }
+          }
         }
       }
     }
@@ -260,7 +325,7 @@ body {
     .feedback {
       width: 100%;
       padding: 1.5rem 1rem;
-      background: linear-gradient(45deg,#30496b,#30b8d2);
+      background: linear-gradient(45deg, #30496b, #30b8d2);
       @include flex(center, center, column, 3rem);
       .feedback-header {
         width: 100%;
@@ -564,7 +629,7 @@ body {
       label {
         width: 100%;
         @include flex(flex-start, flex-start, column, 1rem);
-
+        z-index: 2;
         input {
           width: 100%;
           padding: 0.8rem 0.5rem;
@@ -601,6 +666,17 @@ body {
         top: 0;
       }
     }
+  }
+  .spinner {
+    width: 100dvw;
+    height: 100dvh;
+    background: var(--primary-clr);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-content: center;
+    z-index: 99999999999999;
   }
 }
 
@@ -786,7 +862,8 @@ body {
           font-family: var(--arabic-fm-r);
           font-size: var(--font-small);
           @include flex(center, center, row-reverse, 0rem);
-
+          width: min-content;
+          text-align: center;
           span {
             rotate: 180deg;
           }
@@ -820,8 +897,8 @@ body {
       background: var(--body-bg-clr);
       padding: 1rem;
       bottom: 0;
-      border-top-left-radius: var(--border-radius);
-      border-top-right-radius: var(--border-radius);
+      border-top-left-radius: var(--border-radius2);
+      border-top-right-radius: var(--border-radius2);
       @include flex(flex-start, flex-start, column, 1rem);
       box-shadow: 0px -10px 10px rgba(0, 0, 0, 0.1);
       pointer-events: none;
@@ -918,6 +995,3 @@ body {
     background-image: url("../../icons/arrow-left.svg");
   }
 }
-
-
-

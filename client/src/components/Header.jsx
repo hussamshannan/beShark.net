@@ -1,8 +1,8 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import "../assets/style/header/header.css";
-import logo from "../assets/images/logo_1.webp";
-
+import logo from "../assets/images/Logo_1.webp";
+import axios from "../axiosInstance";
 export default function Header() {
   const [isSideOpen, setIsSideOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -94,70 +94,95 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  const [menuTxt, setmenuTxt] = useState({});
+
+  useLayoutEffect(() => {
+    getMenu();
+  }, []);
+  async function getMenu() {
+    try {
+      const response = await axios.get("/menu/");
+
+      if (response.status === 200 || response.status === 201) {
+        const menuData = response.data.menu;
+
+        // ✅ Save to state
+        setmenuTxt(menuData);
+
+        // ✅ Save to localStorage
+        localStorage.setItem("menuTxt", JSON.stringify(menuData));
+      } else {
+        throw new Error("Unexpected response status");
+      }
+    } catch (error) {
+      toast.error("فشل في الحفظ!");
+      console.error(error);
+    }
+  }
 
   return (
     <header className={`main_header ${isScrolled ? "scrolled" : ""}`}>
       <nav dir="auto">
         <ul>
           <li>
-            <Link to="/">الرئيسية</Link>
+            <Link to="/">{menuTxt.home}</Link>
           </li>
           <li>
-            <p>عنا</p>
+            <p>{menuTxt.aboutLabel}</p>
             <span>{downArrow}</span>
             <div className="droplist">
               <ul>
                 <li>
-                  <Link to="/about">عن شارِك للإستشارات</Link>
+                  <Link to="/about">{menuTxt.about}</Link>
                 </li>
                 <li>
-                  <Link to="/why-us">لماذا شارِك للإستشارات؟</Link>
+                  <Link to="/why-us">{menuTxt.whyUs}</Link>
                 </li>
               </ul>
             </div>
           </li>
           <li>
-            <Link to={"/feasibility-studies"}>دراسات الجدوى</Link>
+            <Link to={"/feasibility-studies"}>{menuTxt.studies}</Link>
             <span>{downArrow}</span>
             <div className="droplist">
               <ul dir="auto">
                 <li>
-                  <Link to="/factories">المصانع</Link>
+                  <Link to="/factories">{menuTxt.factories}</Link>
                 </li>
                 <li>
-                  <Link to="/restaurants">المطاعم</Link>
+                  <Link to="/restaurants">{menuTxt.restaurants}</Link>
                 </li>
                 <li>
-                  <Link to="/schools">المدارس</Link>
+                  <Link to="/schools">{menuTxt.schools}</Link>
                 </li>
                 <li>
-                  <Link to="/farms">المزارع</Link>
+                  <Link to="/farms">{menuTxt.farms}</Link>
                 </li>
                 <li>
-                  <Link to="/e-commerce-projects">
-                    مشروعات التجارة الالكترونية
-                  </Link>
+                  <Link to="/e-commerce-projects">{menuTxt.ecommerce}</Link>
                 </li>
                 <li>
-                  <Link to="/medical-sector">القطاع الطبي</Link>
+                  <Link to="/medical-sector">{menuTxt.medical}</Link>
                 </li>
                 <li>
-                  <Link to="/other-projects">مشروعات اخرى</Link>
+                  <Link to="/other-projects">{menuTxt.others}</Link>
                 </li>
               </ul>
             </div>
           </li>
           <li>
-            <Link to="/Administrational-consultations">إستشارات إدارية</Link>
+            <Link to="/Administrational-consultations">
+              {menuTxt.adminConsult}
+            </Link>
           </li>
           <li>
-            <Link to="/files-management">إدارة الملفات</Link>
+            <Link to="/files-management">{menuTxt.filesMgmt}</Link>
           </li>
           <li>
-            <Link to="/previous-works">سابقة الأعمال</Link>
+            <Link to="/previous-works">{menuTxt.prevWork}</Link>
           </li>
           <li>
-            <Link onClick={openDialog}>طلب تواصل</Link>
+            <Link onClick={openDialog}>{menuTxt.contact}</Link>
           </li>
           <li>
             <Link
@@ -172,9 +197,9 @@ export default function Header() {
         </ul>
       </nav>
 
-      <div className="logo">
-        <img src={logo} alt="logo" />
-      </div>
+      <Link to="/" className="logo">
+        <img src={menuTxt.logoUrl || null} alt="logo" />
+      </Link>
 
       <div
         className="menu open"
@@ -190,9 +215,9 @@ export default function Header() {
 
       <div ref={sidebarRef} className={`side ${isSideOpen ? "show" : ""}`}>
         <div className="top">
-          <div className="logo">
-            <img src={logo} alt="logo" />
-          </div>
+          <Link to="/" className="logo">
+            <img src={menuTxt.logoUrl || null} alt="logo" />
+          </Link>
           <div className="menu close" onClick={toggleSidebar}>
             {closeMenu}
           </div>
@@ -202,7 +227,7 @@ export default function Header() {
           <nav>
             <ul dir="auto">
               <li>
-                <Link to="/">الرئيسية</Link>
+                <Link to="/">{menuTxt.home}</Link>
               </li>
 
               <div
@@ -216,10 +241,10 @@ export default function Header() {
                 <div>
                   <ul>
                     <li>
-                      <Link to="/about">عن شارِك للإستشارات</Link>
+                      <Link to="/about">{menuTxt.about}</Link>
                     </li>
                     <li>
-                      <Link to="/why-us">لماذا شارِك للإستشارات؟</Link>
+                      <Link to="/why-us">{menuTxt.whyUs}</Link>
                     </li>
                   </ul>
                 </div>
@@ -232,48 +257,49 @@ export default function Header() {
                 onClick={() => toggleDetails("feasibility")}
               >
                 <summary>
-                  <p>دراسات الجدوى</p>
+                  <p>{menuTxt.studies}</p>
                   <span></span>
                 </summary>
                 <div>
-                <ul>
-                  <li>
-                    <Link to="/factories">المصانع</Link>
-                  </li>
-                  <li>
-                    <Link to="/restaurants">المطاعم</Link>
-                  </li>
-                  <li>
-                    <Link to="/schools">المدارس</Link>
-                  </li>
-                  <li>
-                    <Link to="/farms">المزارع</Link>
-                  </li>
-                  <li>
-                    <Link to="/e-commerce-projects">
-                      مشروعات التجارة الالكترونية
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/medical-sector">القطاع الطبي</Link>
-                  </li>
-                  <li>
-                    <Link to="/other-projects">مشروعات اخرى</Link>
-                  </li>
-                </ul>
+                  <ul>
+                    <li>
+                      <Link to="/factories">{menuTxt.factories}</Link>
+                    </li>
+                    <li>
+                      <Link to="/restaurants">{menuTxt.restaurants}</Link>
+                    </li>
+                    <li>
+                      <Link to="/schools">{menuTxt.schools}</Link>
+                    </li>
+                    <li>
+                      <Link to="/farms">{menuTxt.farms}</Link>
+                    </li>
+                    <li>
+                      <Link to="/e-commerce-projects">{menuTxt.ecommerce}</Link>
+                    </li>
+                    <li>
+                      <Link to="/medical-sector">{menuTxt.medical}</Link>
+                    </li>
+                    <li>
+                      <Link to="/other-projects">{menuTxt.others}</Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
               <li>
                 <Link to="/Administrational-consultations">
-                  استشارات ادارية
+                  {menuTxt.adminConsult}
                 </Link>
               </li>
               <li>
-                <Link to="/files-management">ادارة الملفات</Link>
+                <Link to="/files-management">{menuTxt.filesMgmt}</Link>
               </li>
               <li>
-                <Link to="/previous-works">سابقة الاعمال</Link>
+                <Link to="/previous-works">{menuTxt.prevWork}</Link>
+              </li>
+              <li>
+                <Link onClick={openDialog}>{menuTxt.contact}</Link>
               </li>
             </ul>
           </nav>

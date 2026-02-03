@@ -1,6 +1,6 @@
 const express = require("express");
 const cloudinary = require("cloudinary").v2;
-const Slide = require("../model/slides");
+const Slide = require("../models/slides");
 const multer = require("multer");
 
 const router = express.Router();
@@ -18,7 +18,6 @@ const uploadToCloudinary = async (buffer, mimetype) => {
     unique_filename: false,
   });
 };
-
 // POST - Create slide
 router.post("/", upload.single("img"), async (req, res) => {
   let uploadedImageId = null;
@@ -93,6 +92,7 @@ router.put("/:id", upload.single("img"), async (req, res) => {
     res.json(updatedSlide);
   } catch (err) {
     res.status(500).json({ error: err.message });
+    console.error(err.message);
   }
 });
 

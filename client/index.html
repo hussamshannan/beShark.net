@@ -2,17 +2,85 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- Standard Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./src/assets/icons/favicon.ico"
+    />
+    <link rel="shortcut icon" href="./src/assets/icons/favicon.ico" />
+
+    <!-- PNG Icons (Better for modern browsers) -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./src/assets/icons/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./src/assets/icons/favicon.ico"
+    />
+
+    <!-- Apple Touch Icon (iOS Home Screen) -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./src/assets/icons/favicon.ico"
+    />
+
+    <!-- Safari pinned tab (macOS Safari) -->
+    <link
+      rel="mask-icon"
+      href="./src/assets/icons/favicon.ico"
+      color="#5bbad5"
+    />
+
+    <!-- Microsoft Tiles (Windows 8/10) -->
+    <meta name="msapplication-TileColor" content="#2d89ef" />
+    <meta
+      name="msapplication-TileImage"
+      content="./src/assets/icons/favicon.ico"
+    />
+
+    <!-- Theme color for address bar in mobile browsers -->
+
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
 
+    <!-- ! -->
+    <meta
+      name="description"
+      content="شركة شارِك للإستشارات تقدم خدمات دراسات الجدوى والاستشارات الإدارية للمشاريع في قطر والسعودية والإمارات وعمان منذ عام 2010، بخبرة تتجاوز 13 عامًا وأكثر من 1150 دراسة جدوى ناجحة."
+    />
+    <meta
+      name="keywords"
+      content="دراسات جدوى, دراسة جدوى في قطر, استشارات أعمال, استشارات إدارية, دراسات جدوى للمشاريع, شركة استشارات في السعودية, دراسة مشروع مطعم, دراسة تطبيق الكتروني, استشارات استثمارية, تطوير الأعمال, دراسات جدوى الخليج"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="شركة شارِك للإستشارات" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta name="theme-color" content="#ffba00" />
-    <title>jadwa-study</title>
+    <title>shark-plan</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const primaryClr = getComputedStyle(document.documentElement)
+          .getPropertyValue("--primary-clr")
+          .trim();
+        const metaTag = document.querySelector('meta[name="theme-color"]');
+        if (metaTag && primaryClr) {
+          metaTag.setAttribute("content", primaryClr);
+        }
+      });
+    </script>
   </body>
 </html>

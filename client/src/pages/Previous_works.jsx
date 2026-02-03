@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 //improt images
 import paperwork from "../assets/images/paperwork.jpg";
@@ -7,7 +7,7 @@ import "../assets/style/common/aboutPages.css";
 import AnimatedContent from "../components/AnimatedContent";
 import axios from "axios";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 export default function Previous_works() {
   const path = window.location.pathname; // e.g. "/e-commerce-projects"
   const lastSegment =
@@ -30,7 +30,7 @@ export default function Previous_works() {
   const fetchAboutByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/category/${category}`
+        `https://shark-consulting-net.onrender.com/category/${category}`
       );
       return response.data; // expecting array of about cards
     } catch (err) {
@@ -50,6 +50,24 @@ export default function Previous_works() {
       },
     }),
   };
+ const [menuTxt, setmenuTxt] = useState({});
+   const [paperwork, setpaperwork] = useState({});
+
+   useEffect(() => {
+     try {
+       const savedMenu = localStorage.getItem("menuTxt");
+       const savepaperwork = localStorage.getItem("paperwork");
+       if (savedMenu && savedMenu !== "undefined") {
+         setmenuTxt(JSON.parse(savedMenu));
+       }
+       if (savepaperwork && savepaperwork !== "undefined") {
+         setpaperwork(JSON.parse(savepaperwork));
+       }
+     } catch (err) {
+       console.warn("Failed to parse saved menuTxt from localStorage:", err);
+       setmenuTxt({});
+     }
+   }, []);
   return (
     <motion.div
       className="about-pages"
@@ -61,9 +79,9 @@ export default function Previous_works() {
     >
       <div className="headerimg">
         <AnimatedContent delay={0.2} threshold={0} duration={2}>
-          <h1>سابقة الأعمال</h1>
+          <h1>{menuTxt.prevWork}</h1>
         </AnimatedContent>
-        <img src={paperwork} alt="" />
+        <img src={paperwork.paperworkImage} alt="" />
       </div>
       <div className="cards">
         <h2>منذ 2010، قمنا بمساعدة الكثير، وما زلنا مستمرين.</h2>
@@ -78,12 +96,8 @@ export default function Previous_works() {
             variants={cardVariants}
           >
             <div className="top">
-              <span>{about.topTitle}</span>
+              {/* <span>{about.topTitle}</span> */}
               <p>{about.topSubtitle}</p>
-            </div>
-
-            <div className="title">
-              <h2>{about.sectionTitle}</h2>
             </div>
 
             <div className="img" style={{ position: "relative" }}>

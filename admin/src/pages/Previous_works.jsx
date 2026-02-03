@@ -5,7 +5,7 @@ import paperwork from "../assets/images/paperwork.jpg";
 
 import "../assets/style/common/aboutPages.css";
 import AnimatedContent from "../components/AnimatedContent";
-import axios from "axios";
+import axios from "../axiosInstance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
@@ -145,13 +145,13 @@ export default function Previous_works() {
     if (about._id && about._id.toString().length !== 13) {
       // existing (assumption: tempId is timestamp 13 chars)
       response = await axios.put(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${about._id}`,
+        `/${lastSegment}/${about._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
     } else {
       response = await axios.post(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}`,
+        `/${lastSegment}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -172,7 +172,7 @@ export default function Previous_works() {
     }
     try {
       await axios.delete(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/${lastSegment}/${id}`
+        `/${lastSegment}/${id}`
       );
       setAboutCards((prev) => prev.filter((_, i) => i !== index));
       toast.success("تم حذف البيانات بنجاح!");
@@ -204,7 +204,7 @@ export default function Previous_works() {
   const fetchAboutByCategory = async (category) => {
     try {
       const response = await axios.get(
-        `https://jadwa-study-backend.netlify.app/.netlify/functions/app/category/${category}`
+        `/category/${category}`
       );
       return response.data; // expecting array of about cards
     } catch (err) {
@@ -239,6 +239,24 @@ export default function Previous_works() {
       },
     }),
   };
+   const [menuTxt, setmenuTxt] = useState({});
+   const [paperwork, setpaperwork] = useState({});
+
+   useEffect(() => {
+     try {
+       const savedMenu = localStorage.getItem("menuTxt");
+       const savepaperwork = localStorage.getItem("paperwork");
+       if (savedMenu && savedMenu !== "undefined") {
+         setmenuTxt(JSON.parse(savedMenu));
+       }
+       if (savepaperwork && savepaperwork !== "undefined") {
+         setpaperwork(JSON.parse(savepaperwork));
+       }
+     } catch (err) {
+       console.warn("Failed to parse saved menuTxt from localStorage:", err);
+       setmenuTxt({});
+     }
+   }, []);
   return (
     <motion.div
       className="about-pages"
@@ -250,9 +268,9 @@ export default function Previous_works() {
     >
       <div className="headerimg">
         <AnimatedContent delay={0.2} threshold={0} duration={2}>
-          <h1>سابقة الأعمال</h1>
+          <h1>{menuTxt.prevWork}</h1>
         </AnimatedContent>
-        <img src={paperwork} alt="" />
+        <img src={paperwork.paperworkImage} alt="" />
       </div>
       <button onClick={() => setShowDialog(true)} className="addSlide">
         {add}
