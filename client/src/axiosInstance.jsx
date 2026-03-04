@@ -4,6 +4,7 @@ import { emit } from "./loadingEvents";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  timeout: 35000,
 });
 
 // Keep track of how many GET requests are active
@@ -11,10 +12,8 @@ let getRequestCount = 0;
 
 axiosInstance.interceptors.request.use(
   (config) => {
-  
-
-    // Only listen to GET requests
-    if (config.method === "get") {
+    // Only show loading for GET requests that are not background refreshes
+    if (config.method === "get" && !config.skipLoading) {
       getRequestCount++;
       emit(true); // loading started
     }
@@ -26,14 +25,14 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    if (response.config.method === "get") {
+    if (response.config.method === "get" && !response.config.skipLoading) {
       getRequestCount = Math.max(getRequestCount - 1, 0);
       if (getRequestCount === 0) emit(false); // loading ended
     }
     return response;
   },
   (error) => {
-    if (error.config && error.config.method === "get") {
+    if (error.config && error.config.method === "get" && !error.config.skipLoading) {
       getRequestCount = Math.max(getRequestCount - 1, 0);
       if (getRequestCount === 0) emit(false); // loading ended
     }

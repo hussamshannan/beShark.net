@@ -94,29 +94,33 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  const [menuTxt, setmenuTxt] = useState({});
+  const [menuTxt, setmenuTxt] = useState(() => {
+    try {
+      const saved = localStorage.getItem("menuTxt");
+      return saved && saved !== "undefined" && saved !== "null"
+        ? JSON.parse(saved)
+        : {};
+    } catch {
+      return {};
+    }
+  });
 
   useLayoutEffect(() => {
     getMenu();
   }, []);
+
   async function getMenu() {
     try {
-      const response = await axios.get("/menu/");
+      const hasCached = !!localStorage.getItem("menuTxt");
+      const response = await axios.get("/menu/", { skipLoading: hasCached });
 
       if (response.status === 200 || response.status === 201) {
         const menuData = response.data.menu;
-
-        // ✅ Save to state
         setmenuTxt(menuData);
-
-        // ✅ Save to localStorage
         localStorage.setItem("menuTxt", JSON.stringify(menuData));
-      } else {
-        throw new Error("Unexpected response status");
       }
     } catch (error) {
-      toast.error("فشل في الحفظ!");
-      console.error(error);
+      console.error("Failed to fetch menu:", error);
     }
   }
 

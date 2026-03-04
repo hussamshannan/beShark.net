@@ -362,10 +362,12 @@
     justify-content: flex-start;
     flex-direction: row;
     gap: 0rem;
-    cursor: pointer;
   }
   .main_header.scrolled > nav > ul > li > .droplist ul li::nth-last-of-type(1) {
     background: transparent;
+  }
+  .main_header.scrolled > nav > ul > li > .droplist ul li {
+    cursor: pointer;
   }
   .main_header.scrolled > nav > ul > li > .droplist ul li a {
     color: var(--txt-clr-light);

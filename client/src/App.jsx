@@ -25,9 +25,18 @@ import administrational_consultations from "./assets/videos/administrational_con
 import files_management from "./assets/videos/files_management.mp4";
 import { motion } from "framer-motion";
 import axios from "./axiosInstance";
+function fromCache(key) {
+  try {
+    const val = localStorage.getItem(key);
+    return val && val !== "undefined" && val !== "null" ? JSON.parse(val) : null;
+  } catch {
+    return null;
+  }
+}
+
 function App() {
-  const [aboutCards, setAboutCards] = useState([]);
-  const [showFeedback, setShowFeedback] = useState(null);
+  const [aboutCards, setAboutCards] = useState(() => fromCache("aboutCards") || []);
+  const [showFeedback, setShowFeedback] = useState(() => fromCache("showFeedback"));
 
   // Helper to parse gradient string
   const parseGradient = (gradientStr) => {
@@ -52,9 +61,7 @@ function App() {
     // Fetch latest saved font from server
     const fetchFont = async () => {
       try {
-        const res = await axios.get(
-          "https://shark-consulting-net.onrender.com/fonts/latest"
-        );
+        const res = await axios.get("/fonts/latest", { skipLoading: true });
         const { fontFamily, fontStyles } = res.data;
         document.documentElement.style.setProperty(
           "--arabic-fm-r",
@@ -78,9 +85,7 @@ function App() {
   useEffect(() => {
     const fetchColors = async () => {
       try {
-        const res = await axios.get(
-          "https://shark-consulting-net.onrender.com/colors/"
-        );
+        const res = await axios.get("/colors/", { skipLoading: true });
         if (res.status === 200 && res.data?.colors) {
           const fetchedColors = res.data.colors;
           Object.entries(fetchedColors).forEach(([key, val]) => {
@@ -130,29 +135,20 @@ function App() {
       <path d="M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z" />
     </svg>
   );
-  const fetchAboutByCategory = async () => {
-    try {
-      const response = await axios.get(
-        `https://shark-consulting-net.onrender.com/question`
-      );
-      return response.data; // expecting array of about cards
-    } catch (err) {
-      console.error("Failed to fetch about data:", err);
-      return [];
-    }
-  };
-  const [content, setContent] = useState({});
+  const [content, setContent] = useState(() => fromCache("appContent") || {});
 
   useEffect(() => {
-    fetchAboutByCategory().then((data) => {
-      if (Array.isArray(data) && data.length > 0) {
-        // Normalize to keep imgUrl as img and no imgFile
-        const normalized = data.map((item) => ({
-          ...item,
-        }));
-        setAboutCards(normalized);
-      }
-    });
+    const hasCache = fromCache("aboutCards") !== null;
+    axios
+      .get("/question", { skipLoading: hasCache })
+      .then((res) => {
+        const data = res.data;
+        if (Array.isArray(data) && data.length > 0) {
+          setAboutCards(data);
+          localStorage.setItem("aboutCards", JSON.stringify(data));
+        }
+      })
+      .catch((err) => console.error("Failed to fetch about data:", err));
   }, []);
 
   const [isVideoVisible, setIsVideoVisible] = useState(false);
@@ -173,32 +169,55 @@ function App() {
     videoRef.current?.pause();
     setIsVideoVisible(false);
   };
-  const [Hero, setHero] = useState({});
-  const [feedbacks, setFeedbacks] = useState([]);
+  const [Hero, setHero] = useState(() => fromCache("appHero") || {});
+  const [feedbacks, setFeedbacks] = useState(() => fromCache("appFeedbacks") || []);
 
   useEffect(() => {
     const fetchContent = async () => {
+      const hasCache = fromCache("appContent") !== null;
+      const skip = { skipLoading: hasCache };
       try {
-        const response = await axios.get("/textContent");
-        setContent(response.data.data);
-        const response2 = await axios.get("/hero");
-        setHero(response2.data.data);
-        const response3 = await axios.get("/paperwork");
-        if (localStorage.getItem("paperwork")) {
-          localStorage.setItem("paperwork", null);
+        const [textRes, heroRes, paperworkRes, uiRes, feedbackRes] =
+          await Promise.allSettled([
+            axios.get("/textContent", skip),
+            axios.get("/hero", skip),
+            axios.get("/paperwork", skip),
+            axios.get("/ui", skip),
+            axios.get("/feedbacks", skip),
+          ]);
+
+        if (textRes.status === "fulfilled") {
+          const data = textRes.value.data.data;
+          setContent(data);
+          localStorage.setItem("appContent", JSON.stringify(data));
+        } else if (!hasCache) setContent(null);
+
+        if (heroRes.status === "fulfilled") {
+          const data = heroRes.value.data.data;
+          setHero(data);
+          localStorage.setItem("appHero", JSON.stringify(data));
         }
-        localStorage.setItem("paperwork", JSON.stringify(response3.data.data));
-        //
-        const res2 = await axios.get("/ui");
-        setShowFeedback(res2.data.showFeedback);
 
-        const res = await axios.get("/feedbacks");
-        setFeedbacks(res.data);
+        if (paperworkRes.status === "fulfilled") {
+          localStorage.setItem(
+            "paperwork",
+            JSON.stringify(paperworkRes.value.data.data)
+          );
+        }
 
+        if (uiRes.status === "fulfilled") {
+          const val = uiRes.value.data.showFeedback;
+          setShowFeedback(val);
+          localStorage.setItem("showFeedback", JSON.stringify(val));
+        }
 
-        
+        if (feedbackRes.status === "fulfilled") {
+          const data = feedbackRes.value.data;
+          setFeedbacks(data);
+          localStorage.setItem("appFeedbacks", JSON.stringify(data));
+        }
       } catch (err) {
-        setContent(null);
+        if (!hasCache) setContent(null);
       } finally {
         setTimeout(() => {
           const videoEl = document.getElementById("hero_video");

@@ -14,6 +14,13 @@ function Loading() {
     return () => unsubscribe();
   }, []);
 
+  // Safety: if loading stays stuck, force-dismiss after 14 seconds
+  useEffect(() => {
+    if (!loading) return;
+    const timer = setTimeout(() => setLoading(false), 40000);
+    return () => clearTimeout(timer);
+  }, [loading]);
+
   return (
     <>
       {loading && (

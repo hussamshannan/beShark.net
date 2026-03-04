@@ -206,6 +206,8 @@ body .container .hero .mySwiper .swiper-slide .swipe-image .text {
 }
 body .container .hero .mySwiper .swiper-slide .swipe-image .text h2,
 body .container .hero .mySwiper .swiper-slide .swipe-image .text p {
+  width: 100% !important;
+  padding: 0.5rem;
   width: -moz-fit-content;
   width: fit-content;
   color: var(--txt-clr-light);
