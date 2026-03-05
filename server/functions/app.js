@@ -58,6 +58,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/ping", (req, res) => res.json({ ok: true }));
+
 app.get("/api/protected", authenticateToken, (req, res) => {
   res.status(200).json({ message: "This is protected data", user: req.user });
 });

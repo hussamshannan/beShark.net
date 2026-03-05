@@ -7,6 +7,10 @@ const authenticateToken = require("../auth/auth");
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+let cachedMenu = null;
+let cacheTime = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 // helper to upload buffer to Cloudinary as data URI
 const uploadToCloudinary = async (buffer, mimetype) => {
   const base64 = buffer.toString("base64");
@@ -52,6 +56,7 @@ router.post(
       if (existing) {
         Object.assign(existing, data);
         await existing.save();
+        cachedMenu = null; // invalidate cache
         return res.status(200).json({
           message: "Editable text updated",
           editableText: existing,
@@ -59,6 +64,7 @@ router.post(
       } else {
         const newDoc = new EditableText(data);
         await newDoc.save();
+        cachedMenu = null; // invalidate cache
         return res.status(201).json({
           message: "Editable text saved",
           editableText: newDoc,
@@ -76,9 +82,17 @@ router.post(
 // GET /menu
 router.get("/", async (req, res) => {
   try {
-    const menu = await EditableText.findOne();
+    if (cachedMenu && Date.now() - cacheTime < CACHE_TTL) {
+      return res.status(200).json({ menu: cachedMenu });
+    }
+
+    const menu = await EditableText.findOne().lean();
     if (!menu)
       return res.status(404).json({ message: "No editable text found" });
+
+    cachedMenu = menu;
+    cacheTime = Date.now();
+
     res.status(200).json({ menu });
   } catch (error) {
     console.error("Error fetching editable text:", error);

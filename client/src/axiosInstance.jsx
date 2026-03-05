@@ -7,6 +7,9 @@ const axiosInstance = axios.create({
   timeout: 35000,
 });
 
+// Wake up the server immediately (Render free-tier cold start)
+axiosInstance.get("/ping", { skipLoading: true }).catch(() => {});
+
 // Keep track of how many GET requests are active
 let getRequestCount = 0;
 

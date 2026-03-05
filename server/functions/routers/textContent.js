@@ -7,6 +7,10 @@ const authenticateToken = require("../auth/auth");
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+let cachedTextContent = null;
+let cacheTime = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 const uploadToCloudinary = async (buffer, mimetype) => {
   const base64 = buffer.toString("base64");
   const dataURI = `data:${mimetype};base64,${base64}`;
@@ -82,10 +86,12 @@ router.post(
       if (existing) {
         Object.assign(existing, updateData);
         await existing.save();
+        cachedTextContent = null; // invalidate cache
         return res.json({ message: "Content updated", content: existing });
       } else {
         const newContent = new textContent(updateData);
         await newContent.save();
+        cachedTextContent = null; // invalidate cache
         return res
           .status(201)
           .json({ message: "Content created", content: newContent });
@@ -109,11 +115,18 @@ router.post(
 
 router.get("/", async (req, res) => {
   try {
-    const existing = await textContent.findOne();
+    if (cachedTextContent && Date.now() - cacheTime < CACHE_TTL) {
+      return res.json({ data: cachedTextContent });
+    }
+
+    const existing = await textContent.findOne().lean();
 
     if (!existing) {
       return res.status(404).json({ message: "No content found" });
     }
+
+    cachedTextContent = existing;
+    cacheTime = Date.now();
 
     res.json({ data: existing });
   } catch (err) {
